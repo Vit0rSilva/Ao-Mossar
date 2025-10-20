@@ -1,0 +1,17 @@
+#execultar docker
+docker-compose up -d
+
+# Pare todos os containers
+docker-compose down
+
+# Remova containers parados
+docker container prune -f
+
+# Verifique se ainda tem containers rodando
+docker ps -a
+
+# Reconstrua e execute
+docker-compose up --build -d
+
+# Verifique os logs
+docker logs fastapi_app
