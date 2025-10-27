@@ -23,4 +23,5 @@ class HorarioResponse(HorarioBase):
     usuario_id: int
     horario_refeicao: time
     tipo_refeicao: Optional[TipoRefeicaoResponse] = None
+    usuario: Optional[UsuarioResponse] = None
     """usuario: Optional[UsuarioResponse] = None"""

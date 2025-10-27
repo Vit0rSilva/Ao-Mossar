@@ -1,62 +1,40 @@
 services:
-  api:
-    build: ./backend
-    container_name: fastapi_app
-    ports:
-      - "8000:8000"
-    env_file: .env
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-    command: >
-      sh -c "sleep 10 && uvicorn main:app --host 0.0.0.0 --port 8000"
-
   db:
     image: mysql:8
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 786952
-      MYSQL_DATABASE: aomossar
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
     ports:
       - "3307:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DATABASE_PASSWORD}"]
+      interval: 15s
+      timeout: 10s
+      retries: 40
+      start_period: 20s
+    networks:
+      - backend
 
-  n8n:
-      image: n8nio/n8n
-      container_name: n8n_app
-      restart: always
-      ports:
-        - "5678:5678"
-      environment:
-        - N8N_BASIC_AUTH_ACTIVE=true
-        - N8N_BASIC_AUTH_USER=admin
-        - N8N_BASIC_AUTH_PASSWORD=admin2111
-        - N8N_HOST=localhost
-        - WEBHOOK_URL=http://localhost:5678/
-        - GENERIC_TIMEZONE=America/Sao_Paulo
-      volumes:
-        - ./n8n_data:/home/node/.n8n
-
-  evolution-api:
-    container_name: evolution_api
-    image: atendai/evolution-api
+  api:
+    build: ./backend
+    container_name: fastapi_app
     restart: always
     ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    volumes:
-      - evolution_store:/evolution/store
-      - evolution_instances:/evolution/instances
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_CONNECTION_URI: ${DATABASE_CONNECTION_URI_PYTHON}
+    command: >
+      sh -c "uvicorn main:app --host 0.0.0.0 --port 8000"
+    networks:
+      - backend
 
 volumes:
-  evolution_store:
-  evolution_instances:
+  mysql_data:

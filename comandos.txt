@@ -15,3 +15,12 @@ docker-compose up --build -d
 
 # Verifique os logs
 docker logs fastapi_app
+
+#Isso diz ao Docker: "Não me importa o que você tem em cache. 
+Destrua os containers antigos e crie novos exatamente como está no arquivo .yml".
+
+docker compose up -d --force-recreate
+
+
+#Parar  e remover
+docker compose down --remove-orphans

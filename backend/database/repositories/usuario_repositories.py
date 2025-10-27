@@ -11,6 +11,11 @@ def get_usuario(db: Session, usuario_id: int):
         Usuario.id == usuario_id
     ).first()
 
+def get_usuario_numero(db: Session, numero: str):
+    return db.query(Usuario).filter(
+        Usuario.telefone == numero
+    ).first()
+
 
 def create_usuario(db: Session, usuario: UsuarioCreate):
     novo_usuario = Usuario(**usuario.model_dump())

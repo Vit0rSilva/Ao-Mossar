@@ -11,6 +11,10 @@ def get_tipo_refeicao(db: Session, tipo_refeicao_id: int):
         TipoRefeicao.id == tipo_refeicao_id
     ).first()
 
+def get_tipo_refeicao_nome(db: Session, tipo_refeicao: str):
+    return db.query(TipoRefeicao).filter(
+        TipoRefeicao.nome == tipo_refeicao
+    ).first()
 
 def create_tipo_refeicao(db: Session, tipo_refeicao: TipoRefeicaoCreate):
     novo_tipo_refeicao = TipoRefeicao(**tipo_refeicao.model_dump())

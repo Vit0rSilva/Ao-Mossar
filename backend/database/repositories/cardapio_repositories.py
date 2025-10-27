@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from database.models.cardapio_models import Cardapio
+from database.repositories.horario_repositories import get_horarios_refeicao
 from src.app.schemas.cardapio_schemas import CardapioCreate, CardapioUpdate
+
 
 def get_cardapios(db: Session):
     return db.query(Cardapio).all()
@@ -9,6 +11,17 @@ def get_cardapios(db: Session):
 def get_cardapio(db: Session, cardapio_id: int):
     return db.query(Cardapio).filter(
         Cardapio.id == cardapio_id
+    ).first()
+
+def get_cardapio_usuario_refeicao(usuario_numero:str, tipo_refeicao:str, db):
+
+    horario = get_horarios_refeicao(usuario_numero, tipo_refeicao, db)
+
+    if not horario:
+        return None
+
+    return db.query(Cardapio).filter(
+        Cardapio.horario_id == horario.id
     ).first()
 
 
