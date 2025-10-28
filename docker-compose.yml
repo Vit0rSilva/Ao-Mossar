@@ -1,33 +1,10 @@
 services:
-  db:
-    image: mysql:8
-    container_name: mysql_db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-      MYSQL_DATABASE: ${DATABASE_NAME}
-    ports:
-      - "3307:3306"
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DATABASE_PASSWORD}"]
-      interval: 15s
-      timeout: 10s
-      retries: 40
-      start_period: 20s
-    networks:
-      - backend
-
   api:
     build: ./backend
     container_name: fastapi_app
     restart: always
     ports:
       - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
     env_file: .env
     environment:
       DATABASE_CONNECTION_URI: ${DATABASE_CONNECTION_URI_PYTHON}
@@ -36,5 +13,5 @@ services:
     networks:
       - backend
 
-volumes:
-  mysql_data:
+networks:
+  backend:

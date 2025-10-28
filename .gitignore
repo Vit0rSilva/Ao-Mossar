@@ -2,3 +2,5 @@
 
 # Ignorar dados do MySQL
 mysql_data/
+
+.env
