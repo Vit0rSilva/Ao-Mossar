@@ -41,7 +41,7 @@ def cardapio_por_id(cardapio_id: int, db: Session = Depends(get_db)):
         data=cardapio_data
     )
 
-@router.get("/{usuario_numero}/{tipo_refeicao}", response_model=response_schemas.SuccessResponse)
+@router.get("/usuario/{usuario_numero}/{tipo_refeicao}", response_model=response_schemas.SuccessResponse)
 def todos_cardapio_refeicao(
     usuario_numero: str,
     tipo_refeicao: str,
@@ -60,7 +60,7 @@ def todos_cardapio_refeicao(
         data=cardapio_data
     )
 
-@router.get("/usuarios/{usuario_numero}", response_model=response_schemas.SuccessResponse)
+@router.get("/usuario/{usuario_numero}", response_model=response_schemas.SuccessResponse)
 def todos_cardapio_usuario(
     usuario_numero: str,
     db: Session = Depends(get_db)
