@@ -26,6 +26,16 @@ def get_horarios_refeicao(usuario_numero:str, tipo_refeicao:str, db: Session):
         Horario.usuario_id == usuario_obj.id
     ).first()
 
+def get_horarios_usuario(usuario_numero:str, db: Session):
+    
+    usuario_obj = get_usuario_numero(db, usuario_numero)
+    
+    if not usuario_obj:
+        return None
+        
+    return db.query(Horario).filter(
+        Horario.usuario_id == usuario_obj.id
+    )
 
 def create_horario(db: Session, horario: HorarioCreate):
     novo_horario = Horario(**horario.model_dump())
