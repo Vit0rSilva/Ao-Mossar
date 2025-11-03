@@ -60,22 +60,28 @@ def todos_cardapio_refeicao(
         data=cardapio_data
     )
 
-@router.get("/usuario/{usuario_numero}", response_model=response_schemas.SuccessResponse)
+@router.get("/usuarios/{usuario_numero}", response_model=response_schemas.SuccessResponse)
 def todos_cardapio_usuario(
     usuario_numero: str,
     db: Session = Depends(get_db)
 ):
     
-    cardapio_obj = cardapio_repositories.get_cardapio_usuario(usuario_numero, db)
+    cardapios_list = cardapio_repositories.get_cardapio_usuario(usuario_numero, db)
     
-    if not cardapio_obj:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    if not cardapios_list:
+        raise HTTPException(
+            status_code=404, 
+            detail="Usuário não encontrado ou não possui cardápios"
+        )
 
-    cardapio_data = cardapio_schemas.CardapioResponse.model_validate(cardapio_obj).model_dump()
+    cardapios_data = [
+        cardapio_schemas.CardapioResponse.model_validate(cardapio).model_dump()
+        for cardapio in cardapios_list
+    ]
 
     return response_schemas.SuccessResponse(
-        message="Cardapio encontrado.",
-        data=cardapio_data
+        message=f"Encontrados {len(cardapios_data)} cardápio(s) para o usuário {usuario_numero}",
+        data=cardapios_data
     )
 
 @router.post("/", response_model=response_schemas.SuccessResponse)

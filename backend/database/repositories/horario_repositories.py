@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from database.models.horario_models import Horario
+from database.models.cardapio_models import Cardapio
 from src.app.schemas.horario_schemas import HorarioCreate, HorarioUpdate
 from database.repositories.tipoRefeicao_repositories import get_tipo_refeicao_nome
 from database.repositories.usuario_repositories import get_usuario_numero
@@ -26,8 +27,8 @@ def get_horarios_refeicao(usuario_numero:str, tipo_refeicao:str, db: Session):
         Horario.usuario_id == usuario_obj.id
     ).first()
 
-def get_horarios_usuario(usuario_numero:str, db: Session):
-    
+def get_horarios_usuario(usuario_numero: str, db: Session):
+    """Busca todos os horários de um usuário"""
     usuario_obj = get_usuario_numero(db, usuario_numero)
     
     if not usuario_obj:
@@ -35,7 +36,8 @@ def get_horarios_usuario(usuario_numero:str, db: Session):
         
     return db.query(Horario).filter(
         Horario.usuario_id == usuario_obj.id
-    )
+    ).all()
+
 
 def create_horario(db: Session, horario: HorarioCreate):
     novo_horario = Horario(**horario.model_dump())

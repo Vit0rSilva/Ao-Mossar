@@ -24,16 +24,18 @@ def get_cardapio_usuario_refeicao(usuario_numero:str, tipo_refeicao:str, db):
         Cardapio.horario_id == horario.id
     ).first()
 
-def get_cardapio_usuario(usuario_numero:str, db):
+def get_cardapio_usuario(usuario_numero: str, db: Session):
+    """Busca TODOS os cardápios de TODOS os horários de um usuário"""
+    horarios = get_horarios_usuario(usuario_numero, db)
 
-    horario = get_horarios_usuario(usuario_numero, db)
-
-    if not horario:
+    if not horarios:
         return None
 
+    horario_ids = [horario.id for horario in horarios]
+    
     return db.query(Cardapio).filter(
-        Cardapio.horario_id == horario.id
-    ).first()
+        Cardapio.horario_id.in_(horario_ids)
+    ).all()
 
 def create_cardapio(db: Session, cardapio: CardapioCreate):
     # Converte o Pydantic em dicionário
