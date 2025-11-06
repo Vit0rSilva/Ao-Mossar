@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
@@ -37,4 +40,3 @@ app.include_router(usuario.router)
 app.include_router(cardapio.router)
 app.include_router(alimento.router)
 app.include_router(check.router)
-

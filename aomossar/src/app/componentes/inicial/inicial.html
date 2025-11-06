@@ -1,52 +1,90 @@
-    <div class="container my-5">
-        <header class="text-center mb-5">
-            <h1 class="display-4">👋 Quem está assistindo?</h1>
-            <p class="lead">Selecione seu perfil para continuar.</p>
-        </header>
+<!-- componentes/inicial/inicial.html -->
+<div class="container my-5">
+  <header class="text-center mb-5">
+    <h1 class="display-4">👋 Quem está assistindo?</h1>
+    <p class="lead">Selecione seu perfil para continuar.</p>
+  </header>
 
-        <div class="row justify-content-center g-4">
-            
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="card text-center border-0">
-                    <div class="card-body p-0">
-                        <img src="https://via.placeholder.com/150/007bff/ffffff?text=U1" class="avatar-img" alt="Avatar do Usuário 1">
-                        <h5 class="card-title mb-3">Usuário Principal</h5>
-                        <a href="pagina_usuario_1.html" class="btn btn-primary w-100">Selecionar</a>
-                    </div>
-                </div>
-            </div>
+  <!-- Debug temporário -->
+  <div *ngIf="true" class="alert alert-info">
+    <strong>Debug Info:</strong><br>
+    Carregando: {{ carregando }}<br>
+    Erro: {{ erro }}<br>
+    Quantidade de usuários: {{ usuarios.length }}<br>
+    Usuários: {{ usuarios | json }}
+  </div>
 
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="card text-center border-0">
-                    <div class="card-body p-0">
-                        <img src="https://via.placeholder.com/150/28a745/ffffff?text=U2" class="avatar-img" alt="Avatar do Usuário 2">
-                        <h5 class="card-title mb-3">Convidado</h5>
-                        <a href="pagina_usuario_2.html" class="btn btn-primary w-100">Selecionar</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="card text-center border-0">
-                    <div class="card-body p-0">
-                        <img src="https://via.placeholder.com/150/ffc107/343a40?text=U3" class="avatar-img" alt="Avatar do Usuário 3">
-                        <h5 class="card-title mb-3">Kids</h5>
-                        <a href="pagina_usuario_3.html" class="btn btn-primary w-100">Selecionar</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <div class="card text-center border-0">
-                    <div class="card-body p-0">
-                        <div class="avatar-img bg-light d-flex align-items-center justify-content-center text-secondary" style="font-size: 3rem;">
-                            +
-                        </div>
-                        <h5 class="card-title mb-3">Adicionar Perfil</h5>
-                        <a href="pagina_adicionar_usuario.html" class="btn btn-outline-secondary w-100">Adicionar</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+  <!-- Loading -->
+  <div *ngIf="carregando" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
     </div>
+    <p class="mt-2">Carregando usuários...</p>
+  </div>
+
+  <!-- Erro -->
+  <div *ngIf="erro && !carregando" class="alert alert-danger text-center">
+    {{ erro }}
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarUsuarios()">
+      Tentar Novamente
+    </button>
+  </div>
+
+  <!-- Lista de Usuários -->
+  <div *ngIf="!carregando && !erro" class="row justify-content-center g-4">
+    
+    <!-- Cards de Usuários da API -->
+    <div *ngFor="let usuario of usuarios" 
+         class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="card text-center border-0 shadow-sm hover-shadow">
+        <div class="card-body p-0">
+          <img [src]="gerarAvatar(usuario.nome)" 
+               class="avatar-img" 
+               [alt]="'Avatar do ' + usuario.nome">
+          <h5 class="card-title mt-3 mb-2">{{ usuario.nome }}</h5>
+          <p class="text-muted small mb-3">{{ usuario.telefone }}</p>
+          <button (click)="selecionarUsuario(usuario)" 
+                  class="btn btn-primary w-100">
+            Selecionar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Adicionar Perfil -->
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+      <div class="card text-center border-0">
+        <div class="card-body p-0">
+          <div class="avatar-img bg-light d-flex align-items-center justify-content-center text-secondary" 
+               style="font-size: 3rem;">
+            +
+          </div>
+          <h5 class="card-title mb-3 mt-3">Adicionar Perfil</h5>
+          <button class="btn btn-outline-secondary w-100">
+            Adicionar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal de Sucesso -->
+<div *ngIf="mostrarModal" class="modal fade show d-block" style="background: rgba(0,0,0,0.5)" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-success">✅ Sucesso!</h5>
+      </div>
+      <div class="modal-body text-center py-4">
+        <p class="mb-0">{{ mensagemModal }}</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-primary" (click)="fecharModal()">
+          Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

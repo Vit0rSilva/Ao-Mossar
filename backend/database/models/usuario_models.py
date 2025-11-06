@@ -11,6 +11,8 @@ class Usuario(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(100), nullable=False)
     telefone = Column(String(20), nullable=False)
+    email = Column(String(100), unique=True, nullable=False)
+    senha = Column(String(255), nullable=False)
 
     # Relações - use string references
     horarios = relationship("Horario", back_populates="usuario")

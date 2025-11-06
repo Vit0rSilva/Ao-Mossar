@@ -1,9 +1,33 @@
-/* Estilo customizado para o avatar (opcional) */
-        .avatar-img {
-            width: 150px; /* Tamanho da imagem do avatar */
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%; /* Transforma em círculo */
-            margin-bottom: 15px;
-            border: 4px solid #0d6efd; /* Borda azul para destaque */
-        }
+// features/usuarios/components/usuario-selecao/usuario-selecao.component.scss
+.avatar-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-5px);
+    
+    .avatar-img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.hover-shadow {
+  &:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+  }
+}
+
+.modal {
+  backdrop-filter: blur(5px);
+}

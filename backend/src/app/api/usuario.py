@@ -6,7 +6,6 @@ from src.app.deps import get_db
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
-
 @router.get("/", response_model=response_schemas.SuccessResponse)
 def listar_usuarios(db: Session = Depends(get_db)):
     usuario = usuario_repositories.get_usuarios(db)
@@ -105,3 +104,16 @@ def deletar_usuario(
         message="Usuario deletado com sucesso.",
         data=False
     )
+
+@router.post("/login", response_model=SuccessResponse)
+def login(payload: UsuarioLogin, repo: UsuarioRepository = Depends(get_usuario_repo)):
+    usuario = repo.get_by_email(payload.email)
+    if not usuario or not verify_password(payload.senha, usuario.senha):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"message": "Email ou senha inválidos", "error_code": "EMAIL_SENHA_FALSE"}, headers={"WWW-Authenticate": "Bearer"})
+    token_data = create_access_token(subject=usuario.id)
+    return SuccessResponse(message="Login realizado com sucesso", data={"access_token": token_data["access_token"], "token_type": "bearer", "expires_in": token_data["expires_in"]})
+
+@router.get("/me", response_model=SuccessResponse)
+def me(current_user = Depends(get_current_usuario)):
+    data_user = UsuarioOut.model_validate(current_user).model_dump()
+    return SuccessResponse(message="Usuário autenticado", data=data_user)
