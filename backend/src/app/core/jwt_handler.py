@@ -5,7 +5,11 @@ from typing import Dict, Any
 import os
 
 # ideal: carregar via variáveis de ambiente
-SECRET_KEY = os.getenv("SECRET_KEY", "troque_por_alguma_secret_na_producao")
+#SECRET_KEY = os.getenv("SECRET_KEY", "91SxMtIc0WMEQGpOhTOI2aq6f5szg8zU4QLCutBJ")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if SECRET_KEY is None:
+    raise ValueError("SECRET_KEY não foi definida no .env")
+
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))  # 24h por padrão
 

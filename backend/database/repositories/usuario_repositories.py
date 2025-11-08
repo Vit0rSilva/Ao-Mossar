@@ -1,41 +1,54 @@
+# app/repositories/usuario_repositories.py
 from sqlalchemy.orm import Session
+from typing import Optional
+from uuid import UUID
+import secrets
+
 from database.models.usuario_models import Usuario
-from src.app.schemas.usuario_schemas import UsuarioCreate, UsuarioUpdate
+from src.app.schemas.usuario_schemas import UsuarioCreate
 
-def get_usuarios(db: Session):
-    return db.query(Usuario).all()
+class UsuarioRepository:
+    def __init__(self, db: Session):
+        self.db = db
 
-
-def get_usuario(db: Session, usuario_id: int):
-    return db.query(Usuario).filter(
-        Usuario.id == usuario_id
-    ).first()
-
-def get_usuario_numero(db: Session, numero: str):
-    return db.query(Usuario).filter(
-        Usuario.telefone == numero
-    ).first()
+    def get_usuarios(self):
+        return self.db.query(Usuario).all()
 
 
-def create_usuario(db: Session, usuario: UsuarioCreate):
-    novo_usuario = Usuario(**usuario.model_dump())
-    db.add(novo_usuario)
-    db.commit()
-    db.refresh(novo_usuario)
-    return novo_usuario
+    def get_usuario(self, usuario_id: int):
+        return self.db.query(Usuario).filter(
+            Usuario.id == usuario_id
+        ).first()
 
+    def get_usuario_numero(self, numero: str):
+        return self.db.query(Usuario).filter(
+            Usuario.telefone == numero
+        ).first()
 
-def update_usuario(db: Session, usuario_id: int, usuario_data: UsuarioUpdate):
-    usuario = db.query(Usuario).filter(
-        Usuario.id == usuario_id
-    ).first()
+    def get_by_email(self, email: str) -> Optional[Usuario]:
+        return self.db.query(Usuario).filter(Usuario.email == email).first()
 
-    if not usuario:
-        return None
+    def get_by_id(self, id: str | UUID) -> Optional[Usuario]:
+        try:
+            id_str = str(UUID(str(id)))
+        except (ValueError, TypeError):
+            return None
+        return self.db.query(Usuario).filter(Usuario.id == id_str).first()
 
-    for key, value in usuario_data.model_dump(exclude_unset=True).items():
-        setattr(usuario, key, value)
+    def create(self, usuario_create: UsuarioCreate, hashed_password: str) -> Usuario:
+        usuario = Usuario(
+            nome=usuario_create.nome,
+            email=usuario_create.email,
+            telefone=usuario_create.telefone,
+            senha=hashed_password,
+        )
+        self.db.add(usuario)
+        self.db.commit()
+        self.db.refresh(usuario)
+        return usuario
 
-    db.commit()
-    db.refresh(usuario)
-    return usuario
+    def update(self, usuario: Usuario) -> Usuario:
+        self.db.add(usuario)
+        self.db.commit()
+        self.db.refresh(usuario)
+        return usuario

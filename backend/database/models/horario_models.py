@@ -8,7 +8,7 @@ class Horario(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     tipo_refeicao_id = Column(Integer, ForeignKey("tipos_refeicao.id"))
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    usuario_id = Column(String(36), ForeignKey("usuarios.id"))
     horario_refeicao = Column(Time, nullable=False)  # Nova coluna
 
     tipo_refeicao = relationship("TipoRefeicao", back_populates="horarios")

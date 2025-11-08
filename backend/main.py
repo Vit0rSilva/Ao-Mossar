@@ -8,7 +8,7 @@ from fastapi import HTTPException
 
 from database.database import Base, engine
 import database.models
-from src.app.api import  tipo_refeicao, horario, usuario, cardapio, alimento, check
+from src.app.api import  tipo_refeicao, horario, usuario, cardapio, alimento, check, admin
 from src.app.middlewares.error_handler import (
     http_exception_handler,
     validation_error_handler,
@@ -40,3 +40,4 @@ app.include_router(usuario.router)
 app.include_router(cardapio.router)
 app.include_router(alimento.router)
 app.include_router(check.router)
+app.include_router(admin.router)

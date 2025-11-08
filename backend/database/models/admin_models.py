@@ -6,8 +6,8 @@ from datetime import datetime
 from database.database import Base
 import uuid
 
-class Usuario(Base):
-    __tablename__ = "usuarios"
+class Admin(Base):
+    __tablename__ = "admins"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     nome = Column(String(100), nullable=False)
@@ -18,7 +18,3 @@ class Usuario(Base):
     # ADICIONE ESTAS LINHAS:
     criado_em = Column(DateTime, default=datetime.utcnow, nullable=False)
     atualizado_em = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
-
-    # Relações - use string references
-    horarios = relationship("Horario", back_populates="usuario")
-    checks = relationship("Check", back_populates="usuario")

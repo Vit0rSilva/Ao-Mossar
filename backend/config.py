@@ -1,1 +1,1 @@
-DB_URL = "mysql+pymysql://root:@db:3306/aomossar"
+DB_URL = "mysql+pymysql://root:@localhost:3306/aomossar"

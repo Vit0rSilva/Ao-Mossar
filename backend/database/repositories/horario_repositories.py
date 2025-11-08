@@ -1,9 +1,11 @@
+from fastapi import Depends
 from sqlalchemy.orm import Session
 from database.models.horario_models import Horario
 from database.models.cardapio_models import Cardapio
 from src.app.schemas.horario_schemas import HorarioCreate, HorarioUpdate
 from database.repositories.tipoRefeicao_repositories import get_tipo_refeicao_nome
-from database.repositories.usuario_repositories import get_usuario_numero
+from src.app.deps import get_db, get_usuario_repo, get_current_usuario
+from database.repositories.usuario_repositories import UsuarioRepository
 
 def get_horarios(db: Session):
     return db.query(Horario).all()
@@ -14,10 +16,11 @@ def get_horario(db: Session, horario_id: int):
         Horario.id == horario_id
     ).first()
 
-def get_horarios_refeicao(usuario_numero:str, tipo_refeicao:str, db: Session):
+def get_horarios_refeicao(usuario_numero:str, tipo_refeicao:str,db:Session):
+    repo: UsuarioRepository = Depends(get_usuario_repo)
     
     tipo_refeicao_obj = get_tipo_refeicao_nome(db, tipo_refeicao)
-    usuario_obj = get_usuario_numero(db, usuario_numero)
+    usuario_obj = repo.get_usuario_numero(usuario_numero)
     
     if not tipo_refeicao_obj or not usuario_obj:
         return None
@@ -28,8 +31,9 @@ def get_horarios_refeicao(usuario_numero:str, tipo_refeicao:str, db: Session):
     ).first()
 
 def get_horarios_usuario(usuario_numero: str, db: Session):
+    repo: UsuarioRepository = Depends(get_usuario_repo)
     """Busca todos os horários de um usuário"""
-    usuario_obj = get_usuario_numero(db, usuario_numero)
+    usuario_obj = repo.get_usuario_numero(db, usuario_numero)
     
     if not usuario_obj:
         return None

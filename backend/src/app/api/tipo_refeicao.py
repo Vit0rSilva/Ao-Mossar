@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.app.schemas import tipo_refeicao_schemas, response_schemas
 from database.repositories import tipoRefeicao_repositories
-from src.app.deps import get_db
+from src.app.deps import get_db, get_current_admin
 
 router = APIRouter(prefix="/tipo_refeicoes", tags=["Tipo Refeições"])
 
 
 @router.get("/", response_model=response_schemas.SuccessResponse)
-def listar_tipo_refeicoes(db: Session = Depends(get_db)):
+def listar_tipo_refeicoes(db: Session = Depends(get_db), current_admin = Depends(get_current_admin)):
     tipos_refeicoes = tipoRefeicao_repositories.get_tipo_refeicoes(db)
 
     tipos_refeicoes_data = [
@@ -45,7 +45,8 @@ def tipo_refeicao_por_id(tipo_refeicao_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=response_schemas.SuccessResponse)
 def criar_tipo_refeicao(
     tipo_refeicao: tipo_refeicao_schemas.TipoRefeicaoCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_admin = Depends(get_current_admin)
 ):
     if not tipo_refeicao:
         raise HTTPException(status_code=400, detail="Dados inválidos")

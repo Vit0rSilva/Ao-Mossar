@@ -1,11 +1,11 @@
-# app/service/authUsuario.py
+# app/service/authAdmin.py
 from fastapi import HTTPException, status
-from src.app.schemas.usuario_schemas import UsuarioCreate, UsuarioOut
+from src.app.schemas.admin_schemas import AdminCreate, AdminOut
 from src.app.core.security import hash_password
 from src.app.core.jwt_handler import create_access_token
-from database.repositories.usuario_repositories import UsuarioRepository
+from database.repositories.admin_repositories import AdminRepository
 
-def create_usuario_service(payload: UsuarioCreate, repo: UsuarioRepository):
+def create_admin_service(payload: AdminCreate, repo: AdminRepository):
     if repo.get_by_email(payload.email):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -13,11 +13,11 @@ def create_usuario_service(payload: UsuarioCreate, repo: UsuarioRepository):
         )
 
     hashed = hash_password(payload.senha)
-    usuario = repo.create(payload, hashed_password=hashed)
+    admin = repo.create(payload, hashed_password=hashed)
 
-    token_data = create_access_token(subject=usuario.id)
+    token_data = create_access_token(subject=admin.id)
 
-    out = UsuarioOut.model_validate(usuario)
+    out = AdminOut.model_validate(admin)
 
     return {
         **out.model_dump(mode="json"),

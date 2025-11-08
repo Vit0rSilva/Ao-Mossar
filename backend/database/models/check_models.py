@@ -9,7 +9,7 @@ class Check(Base):
     __tablename__ = "checks"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    usuario_id = Column(String(36), ForeignKey("usuarios.id"))
     horario_id = Column(Integer, ForeignKey("horarios.id"))
     data_check = Column(DateTime, default=datetime.utcnow)
 
