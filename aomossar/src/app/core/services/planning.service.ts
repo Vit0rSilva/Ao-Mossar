@@ -12,7 +12,7 @@ import { AlimentoPayload } from '../../models/alimento';
 @Injectable({ providedIn: 'root' })
 export class PlanningService {
   //private apiUrl = environment.apiUrl;
-  private apiUrl = 'https://algumacoisa-python.gdaxye.easypanel.host'; 
+  private apiUrl = environment.apiUrl; 
 
   constructor(private http: HttpClient) { 
       console.log('🚀 PlanningService INICIADO com URL FORÇADA:', this.apiUrl);

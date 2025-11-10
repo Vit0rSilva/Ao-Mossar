@@ -17,6 +17,5 @@ class CardapioUpdate(CardapioBase):
 class CardapioResponse(CardapioBase):
     id: int
     horario_id: int
-    #horario:int
     principal: Optional[bool] = None
     cardapio_alimentos: List[CardapioAlimentoResponse] = []
