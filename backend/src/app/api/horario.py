@@ -88,15 +88,22 @@ def horario_por_id(horario_id: int, db: Session = Depends(get_db),
 @router.post("/", response_model=response_schemas.SuccessResponse)
 def criar_horario(
     horario: horario_schemas.HorarioCreate,
-    current_user = Depends(get_current_usuario),
     db: Session = Depends(get_db),
-    #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30))
+    current_user = Depends(get_current_usuario)
 ):
-    if not horario:
-        raise HTTPException(status_code=400, detail="Dados inválidos")
+    # ... (validações iniciais) ...
 
+    # Tenta criar
     novo_horario = horario_repositories.create_horario(db, horario, current_user.id)
 
+    # 👇 VERIFICA SE FALHOU
+    if not novo_horario:
+         raise HTTPException(
+            status_code=403, # Forbidden (ou 400 Bad Request)
+            detail="Você não tem permissão para criar um horário para outro usuário."
+        )
+
+    # Se chegou aqui, deu certo
     return response_schemas.SuccessResponse(
         message="Horario criado com sucesso.",
         data=horario_schemas.HorarioResponse.model_validate(novo_horario)
