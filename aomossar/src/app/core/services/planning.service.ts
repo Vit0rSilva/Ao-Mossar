@@ -34,11 +34,11 @@ export class PlanningService {
   // --- Métodos de CRIAÇÃO (POST) ---
 
   criarHorario(payload: HorarioPayload): Observable<any> {
-    return this.http.post(`${this.apiUrl}/horarios`, payload);
+    return this.http.post(`${this.apiUrl}/horarios/`, payload);
   }
 
   criarCardapio(payload: CardapioPayload): Observable<any> {
-    return this.http.post(`${this.apiUrl}/cardapios`, payload);
+    return this.http.post(`${this.apiUrl}/cardapios/`, payload);
   }
 
   criarAlimento(cardapioId: number, payload: AlimentoPayload): Observable<any> {
