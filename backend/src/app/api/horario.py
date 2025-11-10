@@ -36,22 +36,17 @@ def todos_cardapio_usuario(
     
     # 2. Renomeie a variável para clareza (ela recebe Horarios)
     horarios_list = horario_repositories.get_cardapio_usuario(current_user.telefone, db)
-    
-    if not horarios_list:
-        raise HTTPException(
-            status_code=404, 
-            detail="Usuário não encontrado ou não possui horários" # Mensagem de erro corrigida
-        )
 
-    # 3. Corrija o loop e a validação
-    # Você está validando HORARIOS, não cardápios
+
+
     horarios_data = [
-        horario_schemas.HorarioResponse.model_validate(horario).model_dump() # <-- MUDANÇA AQUI
-        for horario in horarios_list # <-- MUDANÇA AQUI
+        horario_schemas.HorarioResponse.model_validate(horario).model_dump()
+        for horario in horarios_list
     ]
 
     return response_schemas.SuccessResponse(
-        message=f"Encontrados {len(horarios_data)} horário(s)", # Mensagem de sucesso corrigida
+
+        message=f"Encontrados {len(horarios_data)} horário(s)", 
         data=horarios_data
     )
 
