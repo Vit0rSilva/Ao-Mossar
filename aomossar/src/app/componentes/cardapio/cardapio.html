@@ -1,0 +1,85 @@
+<div class="page-container">
+  <header class="page-header">
+    <button class="btn-back" (click)="voltar()">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+    <h2>Novo Cardápio</h2>
+  </header>
+
+  <div class="alert-error" *ngIf="erro">
+    <i class="fas fa-exclamation-circle"></i> {{ erro }}
+  </div>
+
+  <section class="menu-form card">
+    <h3>Adicionar Alimentos ao Cardápio</h3>
+    <p class="hint">Adicione os alimentos que farão parte desta refeição.</p>
+
+    <form [formGroup]="formAlimento" (ngSubmit)="adicionarAlimento()" class="add-food-box">
+      <div class="form-row">
+        <div class="form-group grow-2">
+          <label>Nome do Alimento *</label>
+          <input type="text" formControlName="nome" placeholder="Ex: Arroz Branco">
+        </div>
+        <div class="form-group grow-2">
+          <label>Qtd (g/ml) *</label>
+          <input type="number" formControlName="unidade_medida" placeholder="100">
+        </div>
+      </div>
+
+      <div class="nutri-info">
+        <small>Informações Nutricionais (Opcional)</small>
+        <div class="form-row nutri-grid">
+            <div class="form-group grow-2">
+              <input type="number" formControlName="kcal" placeholder="Kcal">
+            </div>
+            <div class="form-group grow-2">
+              <input type="number" formControlName="proteinas" placeholder="Prot (g)">
+            </div>
+            <div class="form-group grow-2">
+              <input type="number" formControlName="carboidratos" placeholder="Carb (g)">
+            </div>
+            <div class="form-group grow-2">
+              <input type="number" formControlName="gordura" placeholder="Gord (g)">
+            </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-add" [disabled]="formAlimento.invalid">
+        <i class="fas fa-plus"></i> Adicionar ao Cardápio
+      </button>
+    </form>
+
+    <div class="added-foods-list" *ngIf="listaAlimentos.length > 0">
+      <h4>Alimentos neste cardápio ({{ listaAlimentos.length }})</h4>
+      <ul>
+        <li *ngFor="let item of listaAlimentos; let i = index">
+          <div class="food-info">
+            <strong>{{ item.nome }}</strong>
+            <span>{{ item.unidade_medida }}g/ml</span>
+            <span class="nutri-summary" *ngIf="item.kcal">({{ item.kcal }} kcal)</span>
+          </div>
+          <button type="button" class="btn-remove" (click)="removerAlimento(i)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <div class="summary">
+      <span *ngIf="listaAlimentos.length > 0">
+        Total: {{ listaAlimentos.length }} alimento(s) no cardápio.
+      </span>
+      <span *ngIf="listaAlimentos.length === 0">
+        Adicione pelo menos um alimento.
+      </span>
+    </div>
+    <button class="btn-save-all" 
+            (click)="salvarCardapio()" 
+            [disabled]="listaAlimentos.length === 0 || enviando">
+      <i class="fas fa-spinner fa-spin" *ngIf="enviando"></i>
+      {{ enviando ? 'Salvando...' : 'Salvar Cardápio' }}
+    </button>
+  </footer>
+</div>

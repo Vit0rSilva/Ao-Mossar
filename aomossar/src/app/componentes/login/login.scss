@@ -1,0 +1,68 @@
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(180deg, #f8fafc, #ffffff);
+
+
+    .card {
+        width: 100%;
+        max-width: 420px;
+        padding: 28px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(2, 6, 23, 0.08);
+        background: #fff;
+
+
+        h2 {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 14px;
+
+            input {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                margin-top: 6px;
+                border-radius: 6px;
+                border: 1px solid #e5e7eb;
+            }
+        }
+
+        .actions {
+            margin-top: 12px;
+
+            button {
+                width: 100%;
+                padding: 10px;
+                border-radius: 8px;
+                border: 0;
+                cursor: pointer;
+            }
+        }
+
+        .error {
+            color: #b91c1c;
+            margin-top: 6px;
+            font-size: 13px;
+        }
+
+        .switch {
+            margin-top: 12px;
+            text-align: center;
+        }
+    }
+}
+
+
+@media (max-width: 480px) {
+    .auth-page {
+        padding: 12px;
+    }
+}

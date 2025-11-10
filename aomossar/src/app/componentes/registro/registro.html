@@ -1,0 +1,42 @@
+<div class="auth-page">
+    <div class="card">
+        <h2>Cadastro</h2>
+
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <label>
+                Nome
+                <input formControlName="nome" type="text" placeholder="Seu nome" />
+            </label>
+
+
+            <label>
+                Email
+                <input formControlName="email" type="email" placeholder="seu@exemplo.com" />
+            </label>
+
+
+            <label>
+                Telefone (com DDI + DDD)
+                <input formControlName="telefone" type="text" placeholder="5511999999999" />
+            </label>
+
+
+            <label>
+                Senha
+                <input formControlName="senha" type="password" placeholder="Senha" />
+            </label>
+
+
+            <div class="actions">
+                <button type="submit" [disabled]="loading">{{ loading ? 'Cadastrando...' : 'Cadastrar' }}</button>
+            </div>
+
+
+            <div class="error" *ngIf="error">{{ error }}</div>
+
+
+            <p class="switch">Já tem conta? <a routerLink="/login">Entrar</a></p>
+        </form>
+    </div>
+</div>

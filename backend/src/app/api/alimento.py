@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from fastapi_limiter.depends import RateLimiter
 from src.app.schemas import alimento_schemas, cardapio_alimento_schemas, response_schemas
 from database.repositories import alimento_repositories
 from database.models.usuario_models import Usuario
@@ -25,7 +26,20 @@ def listar_alimentos(db: Session = Depends(get_db), current_admin = Depends(get_
 
 
 @router.get("/{alimento_id}", response_model=response_schemas.SuccessResponse)
-def alimento_por_id(alimento_id: int, db: Session = Depends(get_db), current_user = Depends(get_current_usuario)):
+def alimento_por_id(alimento_id: int, db: Session = Depends(get_db),
+        current_user: Usuario = Depends(get_current_usuario),
+        pertencimento_service: PertencimentoService = Depends(get_pertencimento_service),
+        #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30))
+    ):
+    tem_permissao = pertencimento_service.verificar_pertecimento_alimento(alimento_id, current_user.id)
+    if not tem_permissao:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": "O alimento não foi encontrado ou não pertence a este usuário.",
+                "error_code": "NOT_FOUND_ALIMENTO"
+            }
+        )
     alimento = alimento_repositories.get_alimento(db, alimento_id)
     if not alimento:
         raise HTTPException(
@@ -50,13 +64,8 @@ def criar_alimento(
     alimento: alimento_schemas.AlimentoCreate,
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(get_current_usuario),
-    pertencimento_service: PertencimentoService = Depends(get_pertencimento_service)
+    #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30))
 ):
-
-    tem_permissao = pertencimento_service.verificar_pertecimento_cardapio(
-        cardapio_id=cardapio_id,
-        usuario_id=current_user.id
-    )
 
     if not alimento:
         raise HTTPException(status_code=400, detail={
@@ -64,17 +73,8 @@ def criar_alimento(
             "error_code": "DADOS_INVALID"
             })
 
-    if not tem_permissao:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "message": "O cardápio não foi encontrado ou não pertence a este usuário.",
-                "error_code": "NOT_FOUND_ALIMENTO"
-            }
-        )
 
-
-    novo_alimento = alimento_repositories.create_alimento(db, alimento, cardapio_id)
+    novo_alimento = alimento_repositories.create_alimento(db, alimento, cardapio_id, current_user.id)
 
     return response_schemas.SuccessResponse(
         message="Alimento criado com sucesso.",
@@ -86,8 +86,20 @@ def criar_alimento(
 def atualizar_alimento(
     alimento_id: int,
     alimento_data: alimento_schemas.AlimentoUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_usuario),
+    pertencimento_service: PertencimentoService = Depends(get_pertencimento_service),
+    #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30))
 ):
+    tem_permissao = pertencimento_service.verificar_pertecimento_alimento(alimento_id, current_user.id)
+    if not tem_permissao:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": "O alimento não foi encontrado ou não pertence a este usuário.",
+                "error_code": "NOT_FOUND_ALIMENTO"
+            }
+        )
     alimento_atualizado = alimento_repositories.update_alimento(
         db, alimento_id, alimento_data
     )
@@ -110,8 +122,20 @@ def atualizar_alimento(
 @router.delete("/{alimento_id}", response_model=response_schemas.SuccessResponse)
 def deletar_alimento(
     alimento_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_usuario),
+    pertencimento_service: PertencimentoService = Depends(get_pertencimento_service),
+    #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30))
 ):
+    tem_permissao = pertencimento_service.verificar_pertecimento_alimento(alimento_id, current_user.id)
+    if not tem_permissao:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": "O alimento não foi encontrado ou não pertence a este usuário.",
+                "error_code": "NOT_FOUND_ALIMENTO"
+            }
+        )
     alimento = alimento_repositories.get_alimento(db, alimento_id)
     if not alimento:
         raise HTTPException(

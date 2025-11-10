@@ -1,13 +1,7 @@
-// app.config.ts
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { routes } from './app/app.routes';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config'; // 1. Importe seu config
+import { App } from './app/app';
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes), // Se você tiver rotas, adicione aqui
-    provideHttpClient(withInterceptorsFromDi()) // ✅ Esta linha resolve o problema
-  ]
-};
+// 3. Passe o 'appConfig' como segundo argumento
+bootstrapApplication(App, appConfig) 
+  .catch((err) => console.error(err));

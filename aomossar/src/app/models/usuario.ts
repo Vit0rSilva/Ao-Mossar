@@ -1,8 +1,10 @@
 // features/usuarios/models/usuario.model.ts
 export interface Usuario {
-  id: number;
+  id: string;
   nome: string;
   telefone: string;
+  email: string;
+  senha: string;
 }
 
 export interface UsuarioResponse {

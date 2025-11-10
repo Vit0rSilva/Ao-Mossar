@@ -3,13 +3,17 @@ from sqlalchemy.orm import Session
 from src.app.schemas import tipo_refeicao_schemas, response_schemas
 from database.repositories import tipoRefeicao_repositories
 from src.app.deps import get_db, get_current_admin
+from fastapi_limiter.depends import RateLimiter
 
 router = APIRouter(prefix="/tipo_refeicoes", tags=["Tipo Refeições"])
 
 
 @router.get("/", response_model=response_schemas.SuccessResponse)
-def listar_tipo_refeicoes(db: Session = Depends(get_db), current_admin = Depends(get_current_admin)):
+def listar_tipo_refeicoes(db: Session = Depends(get_db), 
+    #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30)) 
+    ):
     tipos_refeicoes = tipoRefeicao_repositories.get_tipo_refeicoes(db)
+    
 
     tipos_refeicoes_data = [
         tipo_refeicao_schemas.TipoRefeicaoResponse.model_validate(tr).model_dump()
@@ -23,7 +27,9 @@ def listar_tipo_refeicoes(db: Session = Depends(get_db), current_admin = Depends
 
 
 @router.get("/{tipo_refeicao_id}", response_model=response_schemas.SuccessResponse)
-def tipo_refeicao_por_id(tipo_refeicao_id: int, db: Session = Depends(get_db)):
+def tipo_refeicao_por_id(tipo_refeicao_id: int, db: Session = Depends(get_db), 
+                         #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30)) 
+                         ):
     tipo_refeicao = tipoRefeicao_repositories.get_tipo_refeicao(db, tipo_refeicao_id)
     if not tipo_refeicao:
         raise HTTPException(
@@ -58,12 +64,12 @@ def criar_tipo_refeicao(
         data=tipo_refeicao_schemas.TipoRefeicaoResponse.model_validate(novo_tipo_refeicao)
     )
 
-
 @router.put("/{tipo_refeicao_id}", response_model=response_schemas.SuccessResponse)
 def atualizar_tipo_refeicao(
     tipo_refeicao_id: int,
     tipo_refeicao_data: tipo_refeicao_schemas.TipoRefeicaoUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_admin)
 ):
     tipo_refeicao_atualizado = tipoRefeicao_repositories.update_tipo_refeicao(
         db, tipo_refeicao_id, tipo_refeicao_data
@@ -83,11 +89,11 @@ def atualizar_tipo_refeicao(
         data=tipo_refeicao_schemas.TipoRefeicaoResponse.model_validate(tipo_refeicao_atualizado)
     )
 
-
 @router.delete("/{tipo_refeicao_id}", response_model=response_schemas.SuccessResponse)
 def deletar_tipo_refeicao(
     tipo_refeicao_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_admin)
 ):
     tipo_refeicao = tipoRefeicao_repositories.get_tipo_refeicao(db, tipo_refeicao_id)
     if not tipo_refeicao:

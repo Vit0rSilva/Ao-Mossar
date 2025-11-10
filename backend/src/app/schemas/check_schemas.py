@@ -8,16 +8,16 @@ class CheckBase(BaseModel):
     model_config = {"from_attributes": True}
 
 class CheckCreate(CheckBase):
-    usuario_id: int
+    usuario_id: str
     horario_id: int
 
 class CheckUpdate(CheckBase):
-    usuario_id: Optional[int] = None
+    usuario_id: Optional[str] = None
     horario_id: Optional[int] = None
 
 class CheckResponse(CheckBase):
     id: int
-    usuario_id: int
+    usuario_id: str
     horario_id: int
     data_check: datetime
     usuario: Optional[UsuarioResponse] = None

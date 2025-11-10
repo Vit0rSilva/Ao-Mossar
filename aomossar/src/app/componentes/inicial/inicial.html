@@ -1,90 +1,150 @@
-<!-- componentes/inicial/inicial.html -->
-<div class="container my-5">
-  <header class="text-center mb-5">
-    <h1 class="display-4">👋 Quem está assistindo?</h1>
-    <p class="lead">Selecione seu perfil para continuar.</p>
-  </header>
+<div class="dashboard-container" *ngIf="!loading; else loadingTemplate">
 
-  <!-- Debug temporário -->
-  <div *ngIf="true" class="alert alert-info">
-    <strong>Debug Info:</strong><br>
-    Carregando: {{ carregando }}<br>
-    Erro: {{ erro }}<br>
-    Quantidade de usuários: {{ usuarios.length }}<br>
-    Usuários: {{ usuarios | json }}
+  <!-- ESTADO VAZIO: Se o usuário não tem NENHUM horário -->
+  <div class="empty-state" *ngIf="meusHorarios.length === 0 && !erro">
+    <img src="assets/illustrations/empty-plan.svg" alt="Sem plano" onerror="this.src='https://placehold.co/300x200/e2e8f0/64748b?text=Começar+Plano'">
+    <h2>Seu plano alimentar está vazio!</h2>
+    <p>Vamos começar definindo seus horários de refeição.</p>
+    <button class="btn-primary-lg" routerLink="/adicionar/horario">Criar meu primeiro horário</button>
   </div>
 
-  <!-- Loading -->
-  <div *ngIf="carregando" class="text-center">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Carregando...</span>
-    </div>
-    <p class="mt-2">Carregando usuários...</p>
-  </div>
+  <!-- DASHBOARD REAL -->
+  <div class="dashboard-grid" *ngIf="meusHorarios.length > 0">
 
-  <!-- Erro -->
-  <div *ngIf="erro && !carregando" class="alert alert-danger text-center">
-    {{ erro }}
-    <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarUsuarios()">
-      Tentar Novamente
-    </button>
-  </div>
+    <!-- COLUNA 1: Tipos de Refeição -->
+    <aside class="col-types">
+      <h3>Minhas Refeições</h3>
+      <p class="subtitle">O que você já planejou</p>
 
-  <!-- Lista de Usuários -->
-  <div *ngIf="!carregando && !erro" class="row justify-content-center g-4">
-    
-    <!-- Cards de Usuários da API -->
-    <div *ngFor="let usuario of usuarios" 
-         class="col-6 col-sm-4 col-md-3 col-lg-2">
-      <div class="card text-center border-0 shadow-sm hover-shadow">
-        <div class="card-body p-0">
-          <img [src]="gerarAvatar(usuario.nome)" 
-               class="avatar-img" 
-               [alt]="'Avatar do ' + usuario.nome">
-          <h5 class="card-title mt-3 mb-2">{{ usuario.nome }}</h5>
-          <p class="text-muted small mb-3">{{ usuario.telefone }}</p>
-          <button (click)="selecionarUsuario(usuario)" 
-                  class="btn btn-primary w-100">
-            Selecionar
-          </button>
-        </div>
+      <div class="types-list">
+        <!-- Tipos Configurados (Ativos) -->
+         <div *ngFor="let tipo of todosTiposRefeicao"
+              class="type-item"
+              [class.active]="tiposJaConfigurados.has(tipo.id)"
+              [class.hidden]="!tiposJaConfigurados.has(tipo.id) && !expandirTipos">
+
+              <div class="type-icon">
+                <!-- Ícone dinâmico baseado no nome da refeição (simplificado) -->
+                <i class="fas" [ngClass]="{
+                  'fa-coffee': tipo.nome.includes('cafe'),
+                  'fa-sun': tipo.nome.includes('almoco'),
+                  'fa-moon': tipo.nome.includes('jantar'),
+                  'fa-apple-alt': tipo.nome.includes('lanche') || tipo.nome.includes('treino')
+                }"></i>
+              </div>
+              <span class="type-name">{{ tipo.nome | titlecase }}</span>
+              <i class="fas fa-check-circle status-icon" *ngIf="tiposJaConfigurados.has(tipo.id)"></i>
+         </div>
       </div>
-    </div>
 
-    <!-- Card Adicionar Perfil -->
-    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-      <div class="card text-center border-0">
-        <div class="card-body p-0">
-          <div class="avatar-img bg-light d-flex align-items-center justify-content-center text-secondary" 
-               style="font-size: 3rem;">
-            +
+      <button class="btn-toggle-types" (click)="expandirTipos = !expandirTipos">
+        {{ expandirTipos ? 'Ver menos opções' : 'Ver mais opções de refeição' }}
+      </button>
+    </aside>
+
+    <!-- COLUNA 2: Linha do Tempo e Detalhes -->
+    <main class="col-schedule">
+
+      <!-- Header da seção com botão de novo horário -->
+      <header class="schedule-header">
+        <div>
+          <h2>Seu dia alimentar</h2>
+          <p *ngIf="proximoHorario">
+            Próxima refeição: <strong>{{ formatarHora(proximoHorario.horario_refeicao) }} - {{ proximoHorario.tipo_refeicao.nome | titlecase }}</strong>
+          </p>
+        </div>
+        <button class="btn-new-schedule" routerLink="/adicionar/horario">
+          <i class="fas fa-plus"></i> Novo Horário
+        </button>
+      </header>
+
+      <!-- Barra de Navegação de Horários (Timeline) -->
+      <div class="timeline-nav">
+        <button *ngFor="let horario of meusHorarios"
+                class="timeline-item"
+                [class.selected]="horario.id === horarioSelecionado?.id"
+                [class.is-next]="horario.id === proximoHorario?.id"
+                (click)="selecionarHorario(horario)">
+          <span class="time">{{ formatarHora(horario.horario_refeicao) }}</span>
+          <span class="label">{{ horario.tipo_refeicao.nome }}</span>
+        </button>
+      </div>
+
+      <!-- Card de Detalhe do Horário Selecionado -->
+      <section class="schedule-detail-card" *ngIf="horarioSelecionado">
+        <div class="card-header" [class.highlight]="horarioSelecionado.id === proximoHorario?.id">
+          <div class="time-badge">
+            {{ formatarHora(horarioSelecionado.horario_refeicao) }}
           </div>
-          <h5 class="card-title mb-3 mt-3">Adicionar Perfil</h5>
-          <button class="btn btn-outline-secondary w-100">
-            Adicionar
-          </button>
+          <div class="info">
+            <h3>{{ horarioSelecionado.tipo_refeicao.nome | titlecase }}</h3>
+            <span class="badge-next" *ngIf="horarioSelecionado.id === proximoHorario?.id">Próxima Refeição</span>
+          </div>
         </div>
-      </div>
-    </div>
 
+        <div class="card-body">
+          <!-- CASO 1: Tem cardápio configurado -->
+          <ng-container *ngIf="horarioSelecionado.cardapios.length > 0; else semCardapioTpl">
+            <div class="menu-principal">
+              <h4>Cardápio Principal</h4>
+              <ul class="food-list">
+                <li *ngFor="let item of getCardapioPrincipal(horarioSelecionado)?.cardapio_alimentos">
+                  <span class="food-name">{{ item.alimento.nome }}</span>
+                  <span class="food-qty" *ngIf="item.alimento.unidade_medida">
+                    {{ item.alimento.unidade_medida }}{{ item.alimento.unidade }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Opções Secundárias (Expansível) -->
+            <div class="secondary-menus" *ngIf="getCardapiosSecundarios(horarioSelecionado).length > 0">
+              <button class="btn-expand-menus" (click)="expandirCardapios = !expandirCardapios">
+                {{ expandirCardapios ? 'Ocultar outras opções' : 'Ver ' + getCardapiosSecundarios(horarioSelecionado).length + ' outra(s) opção(ões)' }}
+              </button>
+
+              <div class="expanded-list" *ngIf="expandirCardapios">
+                <div *ngFor="let cardapio of getCardapiosSecundarios(horarioSelecionado); let i = index" class="secondary-menu-item">
+                  <h5>Opção {{ i + 2 }}</h5>
+                  <ul>
+                    <li *ngFor="let item of cardapio.cardapio_alimentos">
+                      {{ item.alimento.nome }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- CASO 2: NÃO tem cardápio para este horário -->
+          <ng-template #semCardapioTpl>
+            <div class="no-menu-state">
+              <i class="fas fa-utensils icon-faded"></i>
+              <p>Você ainda não definiu o que comer neste horário.</p>
+              <button class="btn-create-menu" [routerLink]="['/adicionar/cardapio', horarioSelecionado.id]">
+                Criar Cardápio
+              </button>
+            </div>
+          </ng-template>
+
+        </div>
+      </section>
+
+    </main>
   </div>
 </div>
 
-<!-- Modal de Sucesso -->
-<div *ngIf="mostrarModal" class="modal fade show d-block" style="background: rgba(0,0,0,0.5)" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <h5 class="modal-title text-success">✅ Sucesso!</h5>
-      </div>
-      <div class="modal-body text-center py-4">
-        <p class="mb-0">{{ mensagemModal }}</p>
-      </div>
-      <div class="modal-footer border-0 justify-content-center">
-        <button type="button" class="btn btn-primary" (click)="fecharModal()">
-          Continuar
-        </button>
-      </div>
-    </div>
+<!-- Template de Carregamento -->
+<ng-template #loadingTemplate>
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <p>Carregando seu planejamento...</p>
   </div>
+</ng-template>
+
+<!-- Template de Erro -->
+<div *ngIf="erro" class="error-screen">
+  <i class="fas fa-exclamation-triangle"></i>
+  <p>{{ erro }}</p>
+  <button (click)="carregarDados()">Tentar Novamente</button>
 </div>

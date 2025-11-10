@@ -43,7 +43,7 @@ class Token(BaseModel):
     expires_in: int
 
 class UsuarioResponse(UsuarioBase):
-    id: int
+    id: str
     nome: constr(min_length=1, max_length=100)
     telefone: constr(min_length=8, max_length=20)
 

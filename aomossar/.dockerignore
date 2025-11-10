@@ -1,0 +1,3 @@
+# Ignora a pasta de build local (o Docker cria a dele)
+/dist
+/node_modules

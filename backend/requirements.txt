@@ -1,4 +1,5 @@
 fastapi
+fastapi-limiter[redis]
 uvicorn
 sqlalchemy
 pymysql

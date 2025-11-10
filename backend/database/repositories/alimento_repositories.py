@@ -3,6 +3,7 @@ from database.models.alimento_models import Alimento
 from database.models.cardapio_alimento_models import CardapioAlimento
 from src.app.schemas.alimento_schemas import AlimentoCreate, AlimentoUpdate
 from src.app.schemas.cardapio_alimento_schemas import CardapioAlimentoCreate
+from src.app.service.pertencimento_service import PertencimentoService
 
 def get_alimentos(db: Session):
     return db.query(Alimento).all()
@@ -14,7 +15,9 @@ def get_alimento(db: Session, alimento_id: int):
     ).first()
 
 
-def create_alimento(db: Session, alimento: AlimentoCreate, cardapio_id : int):
+def create_alimento(db: Session, alimento: AlimentoCreate, cardapio_id : int, usuario_id:str):
+    pertencimento_service = PertencimentoService(db=db)
+    if not pertencimento_service.verificar_pertecimento_cardapio(cardapio_id, usuario_id): return False
     # Cria o alimento
     novo_alimento = Alimento(**alimento.model_dump())
     db.add(novo_alimento)

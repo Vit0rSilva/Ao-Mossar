@@ -6,6 +6,7 @@ from src.app.deps import get_db, get_admin_repo, get_current_admin
 from src.app.core.security import verify_password
 from src.app.core.jwt_handler import create_access_token
 from src.app.core.authAdmin import create_admin_service
+from fastapi_limiter.depends import RateLimiter
 
 router = APIRouter(prefix="/admins", tags=["Admins"])
 
@@ -29,7 +30,11 @@ def admin_por_id(admin_id: int, repo: AdminRepository = Depends(get_admin_repo),
     )
 
 @router.post("/login", response_model=response_schemas.SuccessResponse)
-def login(payload: admin_schemas.AdminLogin, repo: AdminRepository = Depends(get_admin_repo)):
+def login(
+        payload: admin_schemas.AdminLogin, 
+        repo: AdminRepository = Depends(get_admin_repo),
+        #limiter: RateLimiter = Depends(RateLimiter(times=2, minutes=120))        
+    ):
     admin = repo.get_by_email(payload.email)
     if not admin or not verify_password(payload.senha, admin.senha):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"message": "Email ou senha inválidos", "error_code": "EMAIL_SENHA_FALSE"}, headers={"WWW-Authenticate": "Bearer"})

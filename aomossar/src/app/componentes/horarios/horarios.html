@@ -1,272 +1,127 @@
-    <header class="bg-primary text-white shadow">
-        <div class="container">
-            <div class="row align-items-center py-3">
-                <div class="col">
-                    <h1 class="h3 mb-0">
-                        <i class="fas fa-utensils me-2"></i>
-                        Meu Cardápio
-                    </h1>
-                </div>
-                <div class="col-auto">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-user-circle me-2"></i>
-                        <span>Vitinho</span>
-                    </div>
-                </div>
-            </div>
+<div class="page-container">
+  <header class="page-header">
+    <button class="btn-back" (click)="voltar()">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+    <h2>Novo Horário de Refeição</h2>
+  </header>
+
+  <div class="content-grid" *ngIf="!loading; else loadingTpl">
+    
+    <!-- ERRO GERAL -->
+    <div class="alert-error" *ngIf="erro">
+      <i class="fas fa-exclamation-circle"></i> {{ erro }}
+    </div>
+
+    <!-- FORMULÁRIO PRINCIPAL (ESQUERDA) -->
+    <section class="main-form card">
+      <h3>1. Detalhes do Horário</h3>
+      <form [formGroup]="formHorario">
+        
+        <div class="form-group">
+          <label>Que horas será essa refeição?</label>
+          <input type="time" formControlName="horario" class="input-lg">
         </div>
-    </header>
 
-    <main class="py-4">
-        <div class="container">
-            <!-- Meal Schedule -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h2 class="h4 text-center mb-4">Horários das Refeições</h2>
-                    <div class="row g-3">
-                        <!-- Café da Manhã -->
-                        <div class="col-md-3 col-sm-6">
-                            <div class="card meal-card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-coffee fa-2x text-warning mb-3"></i>
-                                    <h5 class="card-title">Café da Manhã</h5>
-                                    <p class="meal-time">07:00</p>
-                                    <span class="badge bg-light text-dark">Em breve</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Almoço -->
-                        <div class="col-md-3 col-sm-6">
-                            <div class="card meal-card h-100 border-primary shadow">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-utensils fa-2x text-primary mb-3"></i>
-                                    <h5 class="card-title text-primary">Almoço</h5>
-                                    <p class="meal-time">13:00</p>
-                                    <span class="badge bg-success">Disponível</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Lanche da Tarde -->
-                        <div class="col-md-3 col-sm-6">
-                            <div class="card meal-card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-apple-alt fa-2x text-info mb-3"></i>
-                                    <h5 class="card-title">Lanche da Tarde</h5>
-                                    <p class="meal-time">16:00</p>
-                                    <span class="badge bg-light text-dark">Em breve</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Jantar -->
-                        <div class="col-md-3 col-sm-6">
-                            <div class="card meal-card h-100 border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-moon fa-2x text-secondary mb-3"></i>
-                                    <h5 class="card-title">Jantar</h5>
-                                    <p class="meal-time">19:00</p>
-                                    <span class="badge bg-light text-dark">Em breve</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Current Meal Details -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card shadow border-0">
-                        <div class="card-header bg-primary text-white">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="h5 mb-0">
-                                    <i class="fas fa-utensils me-2"></i>
-                                    Cardápio do Almoço
-                                </h3>
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-clock me-2"></i>
-                                    <span>13:00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <!-- Food Items Grid -->
-                            <div class="row g-3">
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card food-item h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Feijão carioca cozido de caldo</h6>
-                                            <div class="nutrition-info">
-                                                <span class="badge bg-secondary nutrition-badge me-1">80g</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card food-item h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Arroz Branco Cozido</h6>
-                                            <div class="nutrition-info">
-                                                <span class="badge bg-secondary nutrition-badge me-1">78g</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card food-item h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">File de Frango grelhado</h6>
-                                            <div class="nutrition-info">
-                                                <span class="badge bg-secondary nutrition-badge me-1">130g</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card food-item h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Alface crua</h6>
-                                            <div class="nutrition-info">
-                                                <span class="badge bg-secondary nutrition-badge me-1">16g</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card food-item h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Tomate cru</h6>
-                                            <div class="nutrition-info">
-                                                <span class="badge bg-secondary nutrition-badge me-1">25g</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card food-item h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Azeite de Olivia</h6>
-                                            <div class="nutrition-info">
-                                                <span class="badge bg-secondary nutrition-badge me-1">10g</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card food-item h-100">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Laranja</h6>
-                                            <div class="nutrition-info">
-                                                <span class="badge bg-secondary nutrition-badge me-1">120g</span>
-                                                <span class="badge bg-info nutrition-badge">1 unidade</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Nutrition Summary -->
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <div class="alert alert-info">
-                                        <div class="row text-center">
-                                            <div class="col-md-3 col-6 mb-2">
-                                                <small class="text-muted d-block">Calorias</small>
-                                                <strong class="h6">--</strong>
-                                            </div>
-                                            <div class="col-md-3 col-6 mb-2">
-                                                <small class="text-muted d-block">Proteínas</small>
-                                                <strong class="h6">--</strong>
-                                            </div>
-                                            <div class="col-md-3 col-6 mb-2">
-                                                <small class="text-muted d-block">Carboidratos</small>
-                                                <strong class="h6">--</strong>
-                                            </div>
-                                            <div class="col-md-3 col-6 mb-2">
-                                                <small class="text-muted d-block">Gorduras</small>
-                                                <strong class="h6">--</strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Upcoming Meals -->
-            <div class="row mt-5">
-                <div class="col-12">
-                    <h3 class="h4 mb-3">Próximas Refeições</h3>
-                    <div class="row g-3">
-                        <!-- Café da Manhã Preview -->
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="card-title">
-                                            <i class="fas fa-coffee text-warning me-2"></i>
-                                            Café da Manhã
-                                        </h5>
-                                        <span class="badge bg-warning text-dark">07:00</span>
-                                    </div>
-                                    <p class="text-muted">Cardápio será disponibilizado em breve</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Lanche da Tarde Preview -->
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="card-title">
-                                            <i class="fas fa-apple-alt text-info me-2"></i>
-                                            Lanche da Tarde
-                                        </h5>
-                                        <span class="badge bg-info">16:00</span>
-                                    </div>
-                                    <p class="text-muted">Cardápio será disponibilizado em breve</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="form-group">
+          <label>Qual o tipo da refeição?</label>
+          <select formControlName="tipo_refeicao_id" class="input-lg">
+            <option [ngValue]="null" disabled>Selecione...</option>
+            <option *ngFor="let tipo of tiposRefeicao" [value]="tipo.id">
+              {{ tipo.nome | titlecase }}
+            </option>
+          </select>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white mt-5 py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="mb-3">Meu Cardápio</h5>
-                    <p class="text-muted">Planejador de refeições personalizado</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="text-muted mb-0">
-                        <i class="fas fa-user me-2"></i>
-                        Vitinho
-                    </p>
-                    <p class="text-muted mb-0">
-                        <i class="fas fa-phone me-2"></i>
-                        (71) 91366-331
-                    </p>
-                </div>
-            </div>
-            <hr class="my-3">
-            <div class="text-center">
-                <small class="text-muted">© 2024 Meu Cardápio - Todos os direitos reservados</small>
-            </div>
+        <div class="form-group checkbox">
+          <label>
+            <input type="checkbox" formControlName="criar_cardapio">
+            Já quero montar o cardápio para este horário
+          </label>
         </div>
-    </footer>
+
+      </form>
+    </section>
+
+    <!-- FORMULÁRIO DE CARDÁPIO (DIREITA - Só aparece se o checkbox estiver marcado) -->
+    <section class="menu-form card" [class.disabled]="!formHorario.get('criar_cardapio')?.value">
+      <h3>2. Montar Cardápio</h3>
+      <p class="hint">Adicione os alimentos que farão parte desta refeição.</p>
+
+      <!-- Form para adicionar UM alimento -->
+      <form [formGroup]="formAlimento" (ngSubmit)="adicionarAlimento()" class="add-food-box">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome do Alimento *</label>
+            <input type="text" formControlName="nome" placeholder="Ex: Arroz Branco">
+          </div>
+          <div class="form-group">
+            <label>Qtd (g/ml) *</label>
+            <input type="number" formControlName="unidade_medida" placeholder="100">
+          </div>
+        </div>
+
+        <!-- Campos Opcionais (Expansível ou fixo, vou deixar fixo simples) -->
+        <div class="nutri-info">
+          <small>Informações Nutricionais (Opcional)</small>
+          <div class="form-row nutri-grid">
+            <div class="form-group grow-2">
+              <input type="number" formControlName="kcal" placeholder="Kcal">
+            </div>
+            <div class="form-group grow-2">
+              <input type="number" formControlName="proteinas" placeholder="Prot (g)">
+            </div>
+            <div class="form-group grow-2">
+              <input type="number" formControlName="carboidratos" placeholder="Carb (g)">
+            </div>
+            <div class="form-group grow-2">
+              <input type="number" formControlName="gordura" placeholder="Gord (g)">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-add" [disabled]="formAlimento.invalid || !formHorario.get('criar_cardapio')?.value">
+          <i class="fas fa-plus"></i> Adicionar ao Cardápio
+        </button>
+      </form>
+
+      <!-- Lista de Alimentos Adicionados -->
+      <div class="added-foods-list" *ngIf="listaAlimentos.length > 0">
+        <h4>Alimentos neste cardápio ({{ listaAlimentos.length }})</h4>
+        <ul>
+          <li *ngFor="let item of listaAlimentos; let i = index">
+            <div class="food-info">
+              <strong>{{ item.nome }}</strong>
+              <span>{{ item.unidade_medida }}g/ml</span>
+              <span class="nutri-summary" *ngIf="item.kcal">({{ item.kcal }} kcal)</span>
+            </div>
+            <button type="button" class="btn-remove" (click)="removerAlimento(i)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER COM AÇÃO FINAL -->
+  <footer class="page-footer">
+    <div class="summary" *ngIf="formHorario.valid">
+      Criando horário às <strong>{{ formHorario.value.horario }}</strong> 
+      <span *ngIf="formHorario.value.criar_cardapio && listaAlimentos.length > 0">
+        com {{ listaAlimentos.length }} alimento(s).
+      </span>
+    </div>
+    <button class="btn-save-all" 
+            (click)="salvarTudo()" 
+            [disabled]="formHorario.invalid || enviando || loading">
+      <i class="fas fa-spinner fa-spin" *ngIf="enviando"></i>
+      {{ enviando ? 'Salvando...' : 'Salvar Planejamento' }}
+    </button>
+  </footer>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="loading-state">Carregando...</div>
+</ng-template>

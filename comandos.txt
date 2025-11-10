@@ -24,3 +24,174 @@ docker compose up -d --force-recreate
 
 #Parar  e remover
 docker compose down --remove-orphans
+
+
+//py
+
+//instalar o venv
+python -m venv venv
+
+//ATIVAR VENV
+venv\Scripts\activate
+
+//DESATIVAR 
+deactivate
+
+//instalar os requeriments
+pip install -r requirements.txt
+
+
+//ATIVAR API
+uvicorn main:app --reload
+
+
+//Rodar as migrations 
+    //inicie o alembic
+        alembic init alembic
+
+
+    alembic revision --autogenerate -m "cria tabela administradores"
+
+    --dps rode
+    alembic upgrade head
+
+
+    Vamos lá, lembra da pagina inicial q vc estava fazendo?? Pronto, vamos criar ela com outra funcionalidade, ela vai ser a pagina principal/inicial do usuario onde vai mostrar o plano alimentar do usuario, ela vai ser dividida em colunas, 1 coluna vai ser todas as refeicoes q o usuario tem salvo em algum cardapio, exemplo: se ele tem cardapios q tem cafe_manha, almoco, jantar não vai mostrar as outras refeicoes q vem da api "http://127.0.0.1:8000/tipo_refeicoes/" "{
+    "success": true,
+    "message": "Encontrados 4 horário(s)",
+    "data": [
+        {
+            "id": 1,
+            "tipo_refeicao_id": 5,
+            "usuario_id": "aa0eb083-91f1-46c7-9521-80f97cfe1938",
+            "horario_refeicao": "13:00:00",
+            "tipo_refeicao": {
+                "id": 5,
+                "nome": "almoco"
+            },
+            "usuario": {
+                "nome": "Vitor",
+                "email": "vss786952@gmail.com",
+                "telefone": "5571991366331",
+                "id": "aa0eb083-91f1-46c7-9521-80f97cfe1938"
+            },
+            "cardapios": [
+                {
+                    "id": 1,
+                    "horario_id": 1,
+                    "principal": true,
+                    "cardapio_alimentos": [
+                        {
+                            "id": 3,
+                            "cardapio_id": 1,
+                            "alimento_id": 3,
+                            "alimento": {
+                                "unidade_medida": 80.0,
+                                "kcal": null,
+                                "proteinas": null,
+                                "gordura": null,
+                                "acucar": null,
+                                "carboidratos": null,
+                                "unidade": null,
+                                "id": 3,
+                                "nome": "Feijão carioca de caldo"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "tipo_refeicao_id": 4,
+            "usuario_id": "aa0eb083-91f1-46c7-9521-80f97cfe1938",
+            "horario_refeicao": "06:30:00",
+            "tipo_refeicao": {
+                "id": 4,
+                "nome": "cafe_manha"
+            },
+            "usuario": {
+                "nome": "Vitor",
+                "email": "vss786952@gmail.com",
+                "telefone": "5571991366331",
+                "id": "aa0eb083-91f1-46c7-9521-80f97cfe1938"
+            },
+            "cardapios": [
+                {
+                    "id": 2,
+                    "horario_id": 2,
+                    "principal": true,
+                    "cardapio_alimentos": [
+                        {
+                            "id": 1,
+                            "cardapio_id": 2,
+                            "alimento_id": 1,
+                            "alimento": {
+                                "unidade_medida": 150.0,
+                                "kcal": null,
+                                "proteinas": null,
+                                "gordura": null,
+                                "acucar": null,
+                                "carboidratos": null,
+                                "unidade": 3,
+                                "id": 1,
+                                "nome": "Ovo galinha Cozido"
+                            }
+                        },
+                        {
+                            "id": 2,
+                            "cardapio_id": 2,
+                            "alimento_id": 2,
+                            "alimento": {
+                                "unidade_medida": 150.0,
+                                "kcal": null,
+                                "proteinas": null,
+                                "gordura": null,
+                                "acucar": null,
+                                "carboidratos": null,
+                                "unidade": null,
+                                "id": 2,
+                                "nome": "CuzCuz de milho"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "tipo_refeicao_id": 1,
+            "usuario_id": "aa0eb083-91f1-46c7-9521-80f97cfe1938",
+            "horario_refeicao": "10:00:00",
+            "tipo_refeicao": {
+                "id": 1,
+                "nome": "lanche_manha"
+            },
+            "usuario": {
+                "nome": "Vitor",
+                "email": "vss786952@gmail.com",
+                "telefone": "5571991366331",
+                "id": "aa0eb083-91f1-46c7-9521-80f97cfe1938"
+            },
+            "cardapios": []
+        },
+        {
+            "id": 4,
+            "tipo_refeicao_id": 7,
+            "usuario_id": "aa0eb083-91f1-46c7-9521-80f97cfe1938",
+            "horario_refeicao": "16:30:00",
+            "tipo_refeicao": {
+                "id": 7,
+                "nome": "pre_treino"
+            },
+            "usuario": {
+                "nome": "Vitor",
+                "email": "vss786952@gmail.com",
+                "telefone": "5571991366331",
+                "id": "aa0eb083-91f1-46c7-9521-80f97cfe1938"
+            },
+            "cardapios": []
+        }
+    ]
+}
+" vai ter uma parte para o usuario expandir e ver os outros tipos q existe para ele colocar. A segunda coluna vai mostrar os horarios salvos pelo usuario e horario q estiver chegando vai estar acesso e mostra os cardapiio principal daquele horario, se caso o usuario queira ver mais ele vai apertar em expandir para ver os outros cardapios se existir mais de um, mas essa coluna é dinamica, ele pode ver os outros horarios e verificar se existe cardapio para aquele horario criado, se não da uma opção de ele criar um cardapio para o usuario mas isso vai redirecionar para outra pagina, e tbm em algum lugar dessa coluna vai ter um botão para "criar horario". Só q vc vai ter q fazer uma logica pq os horarios

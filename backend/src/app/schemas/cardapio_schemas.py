@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from .horario_schemas import HorarioResponse
+#from .horario_schemas import HorarioResponse
 from .cardapio_alimento_schemas import CardapioAlimentoResponse
 
 class CardapioBase(BaseModel):
@@ -17,6 +17,6 @@ class CardapioUpdate(CardapioBase):
 class CardapioResponse(CardapioBase):
     id: int
     horario_id: int
-    horario: Optional[HorarioResponse] = None
+    #horario:int
     principal: Optional[bool] = None
-    cardapio_alimentos: Optional[List[CardapioAlimentoResponse]] = []
+    cardapio_alimentos: List[CardapioAlimentoResponse] = []

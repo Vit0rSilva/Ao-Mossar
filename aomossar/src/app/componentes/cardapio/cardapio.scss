@@ -1,0 +1,159 @@
+$primary: #16a34a;
+$danger: #ef4444;
+$text-dark: #1e293b;
+$text-muted: #64748b;
+$bg-light: #f8fafc;
+$border-color: #e2e8f0;
+
+.page-container {
+  max-width: 700px; // Pode ser menor, já que é só uma coluna
+  margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 80px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+
+  h2 { margin: 0; color: $text-dark; }
+  .btn-back {
+    background: none; border: none; color: $text-muted;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    font-size: 1rem;
+    &:hover { color: $primary; }
+  }
+}
+
+// O grid não é mais necessário, aplicamos o estilo de card direto
+.card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05);
+
+  h3 {
+    margin-top: 0;
+    color: $text-dark;
+    border-bottom: 2px solid $bg-light;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: $text-dark;
+    @media (max-width: 500px) {
+      font-size: 12px;
+    }
+  }
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    &:focus {
+      outline: none;
+      border-color: $primary;
+    }
+  }
+}
+
+// --- Formulário de Alimentos (reutilizado) ---
+.add-food-box {
+  background: $bg-light;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+    .grow-2 { flex: 2; }
+  }
+
+  .nutri-info {
+    margin-bottom: 15px;
+    small { display: block; margin-bottom: 8px; color: $text-muted; }
+    .nutri-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      input { font-size: 0.9rem; padding: 8px; }
+    }
+  }
+
+  .btn-add {
+    width: 100%;
+    background: $text-dark;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+}
+
+// --- Lista de Alimentos (reutilizada) ---
+.added-foods-list {
+  h4 { color: $text-muted; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+  ul {
+    list-style: none; padding: 0;
+    li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid $border-color;
+      
+      .food-info {
+        display: flex; flex-direction: column;
+        strong { color: $text-dark; }
+        span { font-size: 0.9rem; color: $text-muted; }
+      }
+
+      .btn-remove {
+        background: rgba($danger, 0.1); color: $danger;
+        border: none; width: 32px; height: 32px; border-radius: 50%;
+        cursor: pointer;
+        &:hover { background: $danger; color: #fff; }
+      }
+    }
+  }
+}
+
+// --- Footer Fixo (reutilizado) ---
+.page-footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: #fff;
+  padding: 15px 30px;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 10;
+
+  .summary { font-size: 1.1rem; color: $text-dark; }
+
+  .btn-save-all {
+    background: $primary; color: #fff;
+    border: none; padding: 15px 40px; border-radius: 50px;
+    font-size: 1.1rem; font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    &:disabled { background: $text-muted; cursor: not-allowed; }
+  }
+}
+
+.alert-error {
+  background: lighten($danger, 40%);
+  color: darken($danger, 20%);
+  padding: 15px; border-radius: 8px;
+  margin-bottom: 20px;
+}

@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from database.models.cardapio_models import Cardapio
 from database.repositories.horario_repositories import get_horarios_refeicao, get_horarios_usuario
 from src.app.schemas.cardapio_schemas import CardapioCreate, CardapioUpdate
+from src.app.service.pertencimento_service import PertencimentoService
+
 
 
 def get_cardapios(db: Session):
@@ -37,7 +39,11 @@ def get_cardapio_usuario(usuario_numero: str, db: Session):
         Cardapio.horario_id.in_(horario_ids)
     ).all()
 
-def create_cardapio(db: Session, cardapio: CardapioCreate):
+def create_cardapio(db: Session, cardapio: CardapioCreate, usuario_id):
+    pertencimento_service = PertencimentoService(db=db)
+
+    if not pertencimento_service.verificar_pertecimento_horario(cardapio.horario_id, usuario_id): return False
+    
     # Converte o Pydantic em dicionário
     cardapio_data = cardapio.model_dump()
 
