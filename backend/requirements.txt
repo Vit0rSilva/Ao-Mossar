@@ -8,3 +8,4 @@ alembic
 PyJWT
 passlib[argon2]
 cryptography
+python-dotenv
