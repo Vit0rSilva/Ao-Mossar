@@ -11,9 +11,12 @@ import { AlimentoPayload } from '../../models/alimento';
 
 @Injectable({ providedIn: 'root' })
 export class PlanningService {
-  private apiUrl = environment.apiUrl;
+  //private apiUrl = environment.apiUrl;
+  private apiUrl = 'https://algumacoisa-python.gdaxye.easypanel.host'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+      console.log('🚀 PlanningService INICIADO com URL FORÇADA:', this.apiUrl);
+  }
 
   // --- Métodos de LEITURA (GET) ---
   getDashboardData(): Observable<{ tipos: TipoRefeicao[], horarios: Horario[] }> {
