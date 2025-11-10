@@ -35,7 +35,7 @@ app = FastAPI(title="Aomossar API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=["http://localhost:4200","https://algumacoisa-app.gdaxye.easypanel.host"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
