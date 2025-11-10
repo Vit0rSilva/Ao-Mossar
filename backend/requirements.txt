@@ -3,7 +3,7 @@ fastapi-limiter[redis]
 uvicorn
 sqlalchemy
 pymysql
-pydantic
+pydantic[email]
 alembic
 PyJWT
 passlib[argon2]
