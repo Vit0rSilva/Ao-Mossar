@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 // Certifique-se de que o caminho para seu environment está correto
-import { environment } from '../../api/base/base';
+import { environment } from '../../../environments/environment.prod';
+
 
 interface LoginResponse {
     success: boolean;

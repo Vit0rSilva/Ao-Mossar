@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PlanningService } from '../../core/services/planning.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../api/base/base'; 
+import { environment } from '../../../environments/environment.prod';
 import { Usuario } from '../../models/usuario';
 // Interface opcional para tipar seus usuários
 
