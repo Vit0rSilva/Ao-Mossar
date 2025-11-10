@@ -30,7 +30,7 @@ def usuario_por_id(usuario_id: int, repo: UsuarioRepository = Depends(get_usuari
     )
 
 
-@router.post("", response_model=response_schemas.SuccessResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=response_schemas.SuccessResponse, status_code=status.HTTP_201_CREATED)
 def create_usuario(
     payload: usuario_schemas.UsuarioCreate,
     repo: UsuarioRepository = Depends(get_usuario_repo),
