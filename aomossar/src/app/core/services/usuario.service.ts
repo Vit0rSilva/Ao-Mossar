@@ -3,13 +3,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UsuarioResponse, Usuario } from '../../models/usuario';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
   private http = inject(HttpClient); // ✅ Método moderno com inject()
-  private apiUrl = 'https://algumacoisa-python.gdaxye.easypanel.host/usuarios';
+  private apiUrl = environment.apiUrl + '/usuarios';
 
   getUsuarios(): Observable<UsuarioResponse> {
     return this.http.get<UsuarioResponse>(this.apiUrl);
