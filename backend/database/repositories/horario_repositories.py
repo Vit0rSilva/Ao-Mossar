@@ -73,12 +73,24 @@ def get_horarios_usuario(usuario_numero: str, db: Session):
     ).all()
 
 
-def create_horario(db: Session, horario: HorarioCreate, usuario_id):
-    if not PertencimentoService.verificar_pertecimento_id(horario.usuario_id, usuario_id): return False
-    novo_horario = Horario(**horario.model_dump())
+def create_horario(db: Session, horario: HorarioCreate, usuario_id: str):
+    # 1. REMOVA A VERIFICAÇÃO (não é mais necessária)
+    # if not PertencimentoService...
+
+    # 2. FORCE O ID CORRETO
+    # Transformamos o schema Pydantic em um dicionário Python
+    horario_data = horario.model_dump()
+    
+    # Sobrescrevemos o campo 'usuario_id' com o ID garantido do token
+    horario_data['usuario_id'] = usuario_id 
+
+    # 3. CRIA O MODELO USANDO O DICIONÁRIO CORRIGIDO
+    novo_horario = Horario(**horario_data)
+    
     db.add(novo_horario)
     db.commit()
     db.refresh(novo_horario)
+    
     return novo_horario
 
 

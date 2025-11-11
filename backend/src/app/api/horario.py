@@ -96,13 +96,6 @@ def criar_horario(
     # Tenta criar
     novo_horario = horario_repositories.create_horario(db, horario, current_user.id)
 
-    # 👇 VERIFICA SE FALHOU
-    if not novo_horario:
-         raise HTTPException(
-            status_code=403, # Forbidden (ou 400 Bad Request)
-            detail="Você não tem permissão para criar um horário para outro usuário."
-        )
-
     # Se chegou aqui, deu certo
     return response_schemas.SuccessResponse(
         message="Horario criado com sucesso.",
