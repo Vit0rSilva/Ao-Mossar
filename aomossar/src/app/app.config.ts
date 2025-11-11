@@ -6,6 +6,7 @@ import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@a
 import { routes } from './app.routes';
 // Importe seu Interceptor
 import { AuthInterceptor } from './core/guards/auth.interceptor'; 
+import { ErrorInterceptor } from './core/guards/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,10 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     
     provideHttpClient(withInterceptorsFromDi()), 
-    { 
-      provide: HTTP_INTERCEPTORS, 
-      useClass: AuthInterceptor, 
-      multi: true 
-    }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ]
 };
