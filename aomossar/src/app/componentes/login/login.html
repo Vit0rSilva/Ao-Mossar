@@ -1,33 +1,56 @@
 <div class="auth-page">
-    <div class="card">
-        <h2>Entrar</h2>
-
-
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <label>
-                Email
-                <input formControlName="email" type="email" placeholder="seu@exemplo.com" />
-            </label>
-            <div class="error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
-                Email inválido
-            </div>
-
-
-            <label>
-                Senha
-                <input formControlName="senha" type="password" placeholder="Senha" />
-            </label>
-
-
-            <div class="actions">
-                <button type="submit" [disabled]="loading">{{ loading ? 'Entrando...' : 'Entrar' }}</button>
-            </div>
-
-
-            <div class="error" *ngIf="error">{{ error }}</div>
-
-
-            <p class="switch">Ainda não tem conta? <a routerLink="/register">Cadastre-se</a></p>
-        </form>
+  <div class="card">
+    
+    <!-- 1. ADICIONE SUA LOGO AQUI -->
+    <div class="logo-container">
+      <img src="img/logo/logo.png" alt="">
+      <!-- Substitua a tag acima por: <img src="URL_DA_SUA_LOGO" alt="Logo Ao Mossar"> -->
     </div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      
+      <!-- CAMPO EMAIL -->
+      <label for="email">Email</label>
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        placeholder="seu@exemplo.com"
+        [class.invalid]="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)"
+      />
+      <div
+        class="validation-errors"
+        *ngIf="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)"
+      >
+        <small *ngIf="form.get('email')?.errors?.['required']">O email é obrigatório.</small>
+        <small *ngIf="form.get('email')?.errors?.['email']">Por favor, insira um email válido.</small>
+      </div>
+
+      <!-- CAMPO SENHA -->
+      <label for="senha">Senha</label>
+      <input
+        id="senha"
+        formControlName="senha"
+        type="password"
+        placeholder="Senha"
+        [class.invalid]="form.get('senha')?.invalid && (form.get('senha')?.dirty || form.get('senha')?.touched)"
+      />
+      <div
+        class="validation-errors"
+        *ngIf="form.get('senha')?.invalid && (form.get('senha')?.dirty || form.get('senha')?.touched)"
+      >
+        <small *ngIf="form.get('senha')?.errors?.['required']">A senha é obrigatória.</small>
+      </div>
+
+      <!-- AÇÕES -->
+      <div class="actions">
+        <button type="submit" [disabled]="loading || form.invalid">
+          {{ loading ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </div>
+
+      <div class="error-geral" *ngIf="error">{{ error }}</div>
+
+      <p class="switch">Ainda não tem conta? <a routerLink="/register">Cadastre-se</a></p>
+    </form>
+  </div>
 </div>

@@ -1,68 +1,161 @@
+@use "sass:color";
+
+// --- Variáveis de Cor da sua Marca ---
+$primary: #16a34a; // Verde saudável
+$primary-light: #dcfce7;
+$secondary: #475569;
+$bg-light: #f8fafc;
+$text-dark: #1e293b;
+$text-muted: #64748b;
+$danger: #ef4444;
+$white: #ffffff;
+// -------------------------------------
+
+// --- Estilos Globais da Página ---
 .auth-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: linear-gradient(180deg, #f8fafc, #ffffff);
-
-
-    .card {
-        width: 100%;
-        max-width: 420px;
-        padding: 28px;
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(2, 6, 23, 0.08);
-        background: #fff;
-
-
-        h2 {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 12px;
-            font-size: 14px;
-
-            input {
-                display: block;
-                width: 100%;
-                padding: 10px;
-                margin-top: 6px;
-                border-radius: 6px;
-                border: 1px solid #e5e7eb;
-            }
-        }
-
-        .actions {
-            margin-top: 12px;
-
-            button {
-                width: 100%;
-                padding: 10px;
-                border-radius: 8px;
-                border: 0;
-                cursor: pointer;
-            }
-        }
-
-        .error {
-            color: #b91c1c;
-            margin-top: 6px;
-            font-size: 13px;
-        }
-
-        .switch {
-            margin-top: 12px;
-            text-align: center;
-        }
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: $bg-light;
+  padding: 2rem;
 }
 
+// --- Logo ---
+.logo-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  
+  img {
+    max-width: 150px; // Ajuste o tamanho da sua logo
+    height: auto;
+  }
+}
 
-@media (max-width: 480px) {
-    .auth-page {
-        padding: 12px;
+// --- Card Principal ---
+.card {
+  width: 100%;
+  max-width: 400px;
+  background-color: $white;
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+// --- Formulário ---
+h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $text-dark;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; // Espaço entre os elementos do form
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $text-muted;
+  display: block; // Faz o input ficar abaixo
+  margin-bottom: 0.25rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: $text-dark;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: 2px solid $primary;
+    border-color: $primary;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+
+  // Classe de erro vinda do TS
+  &.invalid {
+    border-color: $danger;
+    background-color: lighten($danger, 38%);
+    &:focus {
+      outline-color: $danger;
+      box-shadow: 0 0 0 3px lighten($danger, 35%);
     }
+  }
+}
+
+// --- Botão Principal ---
+.actions button {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background-color: $primary;
+  color: $white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+
+  &:hover {
+    background-color: darken($primary, 5%);
+  }
+
+  &:disabled {
+    background-color: #9ca3af; // Cinza
+    cursor: not-allowed;
+  }
+}
+
+// --- Mensagens de Erro ---
+.validation-errors {
+  display: flex;
+  flex-direction: column;
+  margin-top: -0.5rem; // Puxa para perto do input
+  gap: 0.25rem;
+  
+  small {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: $danger;
+  }
+}
+
+// Erro geral (da API)
+.error-geral {
+  font-size: 0.875rem;
+  color: $danger;
+  background-color: lighten($danger, 38%);
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+// --- Link para Login ---
+.switch {
+  text-align: center;
+  font-size: 0.875rem;
+  color: $text-muted;
+  margin-top: 1rem;
+
+  a {
+    color: $primary;
+    font-weight: 600;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

@@ -1,3 +1,4 @@
+@use "sass:color";
 // Variáveis de Cores (ajuste conforme sua identidade visual)
 $primary: #16a34a; // Verde saudável
 $primary-light: #dcfce7;
@@ -166,6 +167,15 @@ $white: #ffffff;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
+    @media(max-width: 500px){
+      flex-direction: column;
+      align-items: flex-start;
+
+      .btn-new-schedule{
+        width: 100%;
+
+      }
+    }
 
     h2 {
       font-size: 1.8rem;
@@ -186,8 +196,6 @@ $white: #ffffff;
       border-radius: 8px;
       font-weight: 500;
       cursor: pointer;
-      display: flex;
-      align-items: center;
       gap: 8px;
       transition: background 0.2s;
 
@@ -201,6 +209,7 @@ $white: #ffffff;
 // --- Timeline Navigation ---
 .timeline-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 25px;
   overflow-x: auto; // Permite rolagem horizontal em telas pequenas
@@ -219,7 +228,7 @@ $white: #ffffff;
     align-items: center;
     padding: 12px 15px;
     background: $white;
-    border: 2px solid transparent;
+    border: 2px solid $text-muted;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
@@ -240,12 +249,12 @@ $white: #ffffff;
     }
 
     &:hover {
-      background-color: $white;
+      background-color: lighten($text-dark, 75%);
     }
 
     &.selected {
       border-color: $text-dark;
-      background-color: lighten($text-dark, 55%);
+      background-color: lighten($text-dark, 75%);
     }
 
     &.is-next {
@@ -355,21 +364,21 @@ $white: #ffffff;
     margin-bottom: 15px;
   }
 
-  .btn-create-menu {
-    margin-top: 20px;
-    background-color: $primary;
-    color: $white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
+}
+.btn-create-menu {
+  margin-top: 20px;
+  background-color: $primary;
+  color: $white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
 
-    &:hover {
-      background-color: $primary;
-      transform: scale(1.05);
-    }
+  &:hover {
+    background-color: $primary;
+    transform: scale(1.05);
   }
 }
 

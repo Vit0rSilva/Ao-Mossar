@@ -1,42 +1,96 @@
 <div class="auth-page">
-    <div class="card">
-        <h2>Cadastro</h2>
+  <div class="card">
+    
+    <div class="logo-container">
+      
+
+        <img src="img/logo/logo.png" alt="">
+
+      </div>
 
 
-        <form [formGroup]="form" (ngSubmit)="submit()">
-            <label>
-                Nome
-                <input formControlName="nome" type="text" placeholder="Seu nome" />
-            </label>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      
+      <label for="nome">Nome</label>
+      <input
+        id="nome"
+        formControlName="nome"
+        type="text"
+        placeholder="Seu nome"
+        [class.invalid]="nome?.invalid && (nome?.dirty || nome?.touched)"
+      />
+      <div
+        class="validation-errors"
+        *ngIf="nome?.invalid && (nome?.dirty || nome?.touched)"
+      >
+        <small *ngIf="nome?.errors?.['required']">O nome é obrigatório.</small>
+      </div>
 
+      <label for="email">Email</label>
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        placeholder="seu@exemplo.com"
+        [class.invalid]="email?.invalid && (email?.dirty || email?.touched)"
+      />
+      <div
+        class="validation-errors"
+        *ngIf="email?.invalid && (email?.dirty || email?.touched)"
+      >
+        <small *ngIf="email?.errors?.['required']">O email é obrigatório.</small>
+        <small *ngIf="email?.errors?.['pattern']"
+          >Por favor, insira um email válido.</small
+        >
+      </div>
 
-            <label>
-                Email
-                <input formControlName="email" type="email" placeholder="seu@exemplo.com" />
-            </label>
+      <label for="telefone">Telefone (55 71 9...)</label>
+      <input
+        id="telefone"
+        formControlName="telefone"
+        type="tel" 
+        placeholder="+55 (71) 9____-____"
+        (input)="onTelefoneInput($event)"
+        [class.invalid]="telefone?.invalid && (telefone?.dirty || telefone?.touched)"
+      />
+      <div
+        class="validation-errors"
+        *ngIf="telefone?.invalid && (telefone?.dirty || telefone?.touched)"
+      >
+        <small *ngIf="telefone?.errors?.['required']">O telefone é obrigatório.</small>
+        <small *ngIf="telefone?.errors?.['pattern']"
+          >Formato inválido. Deve ser 55719... (13 dígitos)</small
+        >
+      </div>
 
+      <label for="senha">Senha</label>
+      <input
+        id="senha"
+        formControlName="senha"
+        type="password"
+        placeholder="Senha forte"
+        [class.invalid]="senha?.invalid && (senha?.dirty || senha?.touched)"
+      />
+      <div
+        class="validation-errors"
+        *ngIf="senha?.invalid && (senha?.dirty || senha?.touched)"
+      >
+        <small *ngIf="senha?.errors?.['minLength']">Pelo menos 8 caracteres.</small>
+        <small *ngIf="senha?.errors?.['requireUppercase']">Pelo menos 1 letra maiúscula (A-Z).</small>
+        <small *ngIf="senha?.errors?.['requireLowercase']">Pelo menos 1 letra minúscula (a-z).</small>
+        <small *ngIf="senha?.errors?.['requireNumber']">Pelo menos 1 número (0-9).</small>
+        <small *ngIf="senha?.errors?.['requireSpecialChar']">Pelo menos 1 caractere especial (!@#$).</small>
+      </div>
 
-            <label>
-                Telefone (com DDI + DDD)
-                <input formControlName="telefone" type="text" placeholder="5511999999999" />
-            </label>
+      <div class="actions">
+        <button type="submit" [disabled]="loading || form.invalid">
+          {{ loading ? 'Cadastrando...' : 'Cadastrar' }}
+        </button>
+      </div>
 
+      <div class="error-geral" *ngIf="error">{{ error }}</div>
 
-            <label>
-                Senha
-                <input formControlName="senha" type="password" placeholder="Senha" />
-            </label>
-
-
-            <div class="actions">
-                <button type="submit" [disabled]="loading">{{ loading ? 'Cadastrando...' : 'Cadastrar' }}</button>
-            </div>
-
-
-            <div class="error" *ngIf="error">{{ error }}</div>
-
-
-            <p class="switch">Já tem conta? <a routerLink="/login">Entrar</a></p>
-        </form>
-    </div>
+      <p class="switch">Já tem conta? <a routerLink="/login">Entrar</a></p>
+    </form>
+  </div>
 </div>
