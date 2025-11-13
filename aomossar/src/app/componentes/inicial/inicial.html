@@ -25,10 +25,10 @@
           <div class="type-icon">
             <!-- Ícone dinâmico baseado no nome da refeição (simplificado) -->
             <i class="fas" [ngClass]="{
-                  'fa-coffee': tipo.nome.includes('cafe'),
-                  'fa-sun': tipo.nome.includes('almoco'),
-                  'fa-moon': tipo.nome.includes('jantar'),
-                  'fa-apple-alt': tipo.nome.includes('lanche') || tipo.nome.includes('treino')
+                  'fa-coffee': tipo.nome.includes('Cafe'),
+                  'fa-sun': tipo.nome.includes('Almoco'),
+                  'fa-moon': tipo.nome.includes('Jantar'),
+                  'fa-apple-alt': tipo.nome.includes('Lanche') || tipo.nome.includes('Treino')
                 }"></i>
           </div>
           <span class="type-name">{{ tipo.nome | titlecase }}</span>
