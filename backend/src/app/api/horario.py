@@ -83,6 +83,28 @@ def horario_por_id(horario_id: int, db: Session = Depends(get_db),
         message="Horario encontrado.",
         data=horario_data
     )
+@router.get("/admin/{horario_id}", response_model=response_schemas.SuccessResponse)
+def horario_por_id(horario_id: int, db: Session = Depends(get_db), 
+    current_admin = Depends(get_current_admin)
+    #limiter: RateLimiter = Depends(RateLimiter(times=100, minutes=30))                     
+    ):
+    horario = horario_repositories.get_horario(db, horario_id)
+    if not horario:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": "Horario não encontrado",
+                "error_code": "NOT_FOUND_HORARIO"
+            }
+        )
+    
+
+    horario_data = horario_schemas.HorarioResponse.model_validate(horario).model_dump()
+
+    return response_schemas.SuccessResponse(
+        message="Horario encontrado.",
+        data=horario_data
+    )
 
 
 @router.post("/", response_model=response_schemas.SuccessResponse)
