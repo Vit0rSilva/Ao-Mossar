@@ -18,10 +18,11 @@ def get_horario(db: Session, horario_id: int):
     ).first()
 
 def get_horarios_refeicao(usuario_numero:str, tipo_refeicao:str,db:Session):
-    repo: UsuarioRepository = Depends(get_usuario_repo)
     
     tipo_refeicao_obj = get_tipo_refeicao_nome(db, tipo_refeicao)
-    usuario_obj = repo.get_usuario_numero(usuario_numero)
+    pertencimento_service = UsuarioRepository(db=db)
+
+    usuario_obj = pertencimento_service.get_usuario_numero(usuario_numero)
     
     if not tipo_refeicao_obj or not usuario_obj:
         return None
