@@ -12,6 +12,7 @@ export const routes: Routes = [
     { path: 'login', component: Login },
     { path: 'register', component: Registro },
     { path: 'adicionar/horario', component: Horarios,  canActivate: [authGuard], pathMatch: 'full' },
+    { path: 'cardapio/editar/:cardapioId', component: Cardapio },
     { path: 'adicionar/cardapio/:horarioId', component: Cardapio,  canActivate: [authGuard], pathMatch: 'full' },
     // Qualquer outra rota desconhecida redireciona para home (que vai jogar pro login se não tiver auth)
     { path: '**', redirectTo: '' }

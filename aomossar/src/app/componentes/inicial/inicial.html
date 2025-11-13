@@ -2,7 +2,8 @@
 
   <!-- ESTADO VAZIO: Se o usuário não tem NENHUM horário -->
   <div class="empty-state" *ngIf="meusHorarios.length === 0 && !erro">
-    <img src="assets/illustrations/empty-plan.svg" alt="Sem plano" onerror="this.src='https://placehold.co/300x200/e2e8f0/64748b?text=Começar+Plano'">
+    <img src="assets/illustrations/empty-plan.svg" alt="Sem plano"
+      onerror="this.src='https://placehold.co/300x200/e2e8f0/64748b?text=Começar+Plano'">
     <h2>Seu plano alimentar está vazio!</h2>
     <p>Vamos começar definindo seus horários de refeição.</p>
     <button class="btn-primary-lg" routerLink="/adicionar/horario">Criar meu primeiro horário</button>
@@ -18,23 +19,21 @@
 
       <div class="types-list">
         <!-- Tipos Configurados (Ativos) -->
-         <div *ngFor="let tipo of todosTiposRefeicao"
-              class="type-item"
-              [class.active]="tiposJaConfigurados.has(tipo.id)"
-              [class.hidden]="!tiposJaConfigurados.has(tipo.id) && !expandirTipos">
+        <div *ngFor="let tipo of todosTiposRefeicao" class="type-item" [class.active]="tiposJaConfigurados.has(tipo.id)"
+          [class.hidden]="!tiposJaConfigurados.has(tipo.id) && !expandirTipos">
 
-              <div class="type-icon">
-                <!-- Ícone dinâmico baseado no nome da refeição (simplificado) -->
-                <i class="fas" [ngClass]="{
+          <div class="type-icon">
+            <!-- Ícone dinâmico baseado no nome da refeição (simplificado) -->
+            <i class="fas" [ngClass]="{
                   'fa-coffee': tipo.nome.includes('cafe'),
                   'fa-sun': tipo.nome.includes('almoco'),
                   'fa-moon': tipo.nome.includes('jantar'),
                   'fa-apple-alt': tipo.nome.includes('lanche') || tipo.nome.includes('treino')
                 }"></i>
-              </div>
-              <span class="type-name">{{ tipo.nome | titlecase }}</span>
-              <i class="fas fa-check-circle status-icon" *ngIf="tiposJaConfigurados.has(tipo.id)"></i>
-         </div>
+          </div>
+          <span class="type-name">{{ tipo.nome | titlecase }}</span>
+          <i class="fas fa-check-circle status-icon" *ngIf="tiposJaConfigurados.has(tipo.id)"></i>
+        </div>
       </div>
 
       <button class="btn-toggle-types" (click)="expandirTipos = !expandirTipos">
@@ -50,7 +49,8 @@
         <div>
           <h2>Seu dia alimentar</h2>
           <p *ngIf="proximoHorario">
-            Próxima refeição: <strong>{{ formatarHora(proximoHorario.horario_refeicao) }} - {{ proximoHorario.tipo_refeicao.nome | titlecase }}</strong>
+            Próxima refeição: <strong>{{ formatarHora(proximoHorario.horario_refeicao) }} - {{
+              proximoHorario.tipo_refeicao.nome | titlecase }}</strong>
           </p>
         </div>
         <button class="btn-new-schedule" routerLink="/adicionar/horario">
@@ -60,11 +60,9 @@
 
       <!-- Barra de Navegação de Horários (Timeline) -->
       <div class="timeline-nav">
-        <button *ngFor="let horario of meusHorarios"
-                class="timeline-item"
-                [class.selected]="horario.id === horarioSelecionado?.id"
-                [class.is-next]="horario.id === proximoHorario?.id"
-                (click)="selecionarHorario(horario)">
+        <button *ngFor="let horario of meusHorarios" class="timeline-item"
+          [class.selected]="horario.id === horarioSelecionado?.id" [class.is-next]="horario.id === proximoHorario?.id"
+          (click)="selecionarHorario(horario)">
           <span class="time">{{ formatarHora(horario.horario_refeicao) }}</span>
           <span class="label">{{ horario.tipo_refeicao.nome }}</span>
         </button>
@@ -86,7 +84,15 @@
           <!-- CASO 1: Tem cardápio configurado -->
           <ng-container *ngIf="horarioSelecionado.cardapios.length > 0; else semCardapioTpl">
             <div class="menu-principal">
-              <h4>Cardápio Principal</h4>
+              <div class="d-flex justify-content-between">
+                <h4 class="mb-0">Cardápio Principal</h4>
+
+                <button class="btn-create-menu mt-0" *ngIf="getCardapioPrincipal(horarioSelecionado!)?.id"
+                  (click)="abrirEdicaoCardapio(getCardapioPrincipal(horarioSelecionado!)!.id)" title="Editar cardápio">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+
               <ul class="food-list">
                 <li *ngFor="let item of getCardapioPrincipal(horarioSelecionado)?.cardapio_alimentos">
                   <span class="food-name">{{ item.alimento.nome }}</span>
@@ -96,24 +102,39 @@
                 </li>
               </ul>
             </div>
+
             <button class="btn-create-menu" [routerLink]="['/adicionar/cardapio', horarioSelecionado.id]">
               Criar mais cardapios
             </button>
 
+
+
             <!-- Opções Secundárias (Expansível) -->
             <div class="secondary-menus" *ngIf="getCardapiosSecundarios(horarioSelecionado).length > 0">
+              
               <button class="btn-expand-menus" (click)="expandirCardapios = !expandirCardapios">
-                {{ expandirCardapios ? 'Ocultar outras opções' : 'Ver ' + getCardapiosSecundarios(horarioSelecionado).length + ' outra(s) opção(ões)' }}
+                {{ expandirCardapios ? 'Ocultar outras opções' : 'Ver ' +
+                getCardapiosSecundarios(horarioSelecionado).length + ' outra(s) opção(ões)' }}
               </button>
 
               <div class="expanded-list" *ngIf="expandirCardapios">
-                <div *ngFor="let cardapio of getCardapiosSecundarios(horarioSelecionado); let i = index" class="secondary-menu-item">
-                  <h5>Opção {{ i + 2 }}</h5>
+                <div *ngFor="let cardapio of getCardapiosSecundarios(horarioSelecionado); let i = index"
+                  class="secondary-menu-item">
+                  <div class="d-flex justify-content-between">
+                    <h5>Opção {{ i + 2 }}</h5>
+                    <button class="btn-create-menu mt-0" (click)="abrirEdicaoCardapio(cardapio.id)" title="Editar cardápio">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                </div>
                   <ul>
                     <li *ngFor="let item of cardapio.cardapio_alimentos">
                       {{ item.alimento.nome }}
                     </li>
                   </ul>
+                  <button class="btn-make-principal" (click)="abrirModalDefinirPrincipal(cardapio)">
+                    Tornar principal
+                  </button>
+                  
                 </div>
               </div>
             </div>
@@ -150,4 +171,16 @@
   <i class="fas fa-exclamation-triangle"></i>
   <p>{{ erro }}</p>
   <button (click)="carregarDados()">Tentar Novamente</button>
+</div>
+
+<!-- Modal de Confirmação -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal-content">
+    <h3>Definir cardápio principal</h3>
+    <p>Tem certeza que deseja tornar este cardápio o principal?</p>
+    <div class="modal-actions">
+      <button class="btn-confirm" (click)="confirmarDefinirPrincipal()">Sim, definir</button>
+      <button class="btn-cancel" (click)="fecharModal()">Cancelar</button>
+    </div>
+  </div>
 </div>

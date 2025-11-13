@@ -136,7 +136,9 @@ def deletar_alimento(
                 "error_code": "NOT_FOUND_ALIMENTO"
             }
         )
+    
     alimento = alimento_repositories.get_alimento(db, alimento_id)
+
     if not alimento:
         raise HTTPException(
             status_code=404,
@@ -146,8 +148,26 @@ def deletar_alimento(
             }
         )
 
-    db.delete(alimento)
-    db.commit()
+    cardapio_alimento = alimento_repositories.get_cardapio_alimento(db, alimento.id)
+
+    if not cardapio_alimento:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": "Cardapio alimento não encontrado",
+                "error_code": "NOT_FOUND_CARDAPIO_ALIMENTO"
+            }
+        )
+    
+    try:
+        db.delete(alimento)
+        db.delete(cardapio_alimento)
+        db.commit()
+    except Exception as e:
+        db.rollback() # Desfaz tudo se der erro
+        raise e # Retorna o erro
+
+    
 
     return response_schemas.SuccessResponse(
         message="Alimento deletado com sucesso.",

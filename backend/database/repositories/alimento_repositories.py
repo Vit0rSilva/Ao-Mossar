@@ -14,6 +14,12 @@ def get_alimento(db: Session, alimento_id: int):
         Alimento.id == alimento_id
     ).first()
 
+def get_cardapio_alimento(db: Session, alimento_id: int):
+    return db.query(CardapioAlimento).filter(
+        CardapioAlimento.alimento_id == alimento_id
+    ).first()
+
+
 
 def create_alimento(db: Session, alimento: AlimentoCreate, cardapio_id : int, usuario_id:str):
     pertencimento_service = PertencimentoService(db=db)

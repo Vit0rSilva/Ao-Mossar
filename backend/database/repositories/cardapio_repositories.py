@@ -83,16 +83,32 @@ def create_cardapio(db: Session, cardapio: CardapioCreate, usuario_id):
 
 
 def update_cardapio(db: Session, cardapio_id: int, cardapio_data: CardapioUpdate):
-    cardapio = db.query(Cardapio).filter(
-        Cardapio.id == cardapio_id
-    ).first()
+    
+    update_data = cardapio_data.model_dump(exclude_unset=True)
+
+    cardapio = db.query(Cardapio).filter(Cardapio.id == cardapio_id).first()
 
     if not cardapio:
         return None
 
-    for key, value in cardapio_data.model_dump(exclude_unset=True).items():
+    if update_data.get('principal') is True:
+        
+        db.query(Cardapio).filter(
+            Cardapio.horario_id == cardapio.horario_id, # Do mesmo horário
+            Cardapio.id != cardapio_id               # Que NÃO seja este
+        ).update(
+            {Cardapio.principal: False}, 
+            synchronize_session=False  
+        )
+
+    for key, value in update_data.items():
         setattr(cardapio, key, value)
 
-    db.commit()
-    db.refresh(cardapio)
-    return carda
+    try:
+        db.commit()
+        db.refresh(cardapio)
+    except Exception as e:
+        db.rollback() # Desfaz tudo se der erro
+        raise e # Retorna o erro
+        
+    return cardapio

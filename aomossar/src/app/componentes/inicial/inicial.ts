@@ -5,11 +5,13 @@ import { PlanningService } from '../../core/services/planning.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.prod';
 import { Usuario } from '../../models/usuario';
+import { Router } from '@angular/router';
 // Interface opcional para tipar seus usuários
 
 import { TipoRefeicao } from '../../models/tipoRefeicao';
 import { Horario } from '../../models/horario';
 import { Cardapio } from '../../models/cardapio';
+
 
 @Component({
   selector: 'app-inicial',
@@ -35,7 +37,16 @@ export class Inicial implements OnInit{
   expandirTipos = false;
   expandirCardapios = false;
 
-  constructor(private planningService: PlanningService) {}
+  cardapioSelecionado: Cardapio | null = null;
+  mostrarModal = false;
+  
+
+  constructor(private planningService: PlanningService, private router: Router) {}
+
+  abrirEdicaoCardapio(cardapioId: number) {
+    // navega para rota de edição — ajuste a rota conforme seu routing
+    this.router.navigate(['/cardapio/editar', cardapioId]);
+  }
 
   ngOnInit() {
     this.carregarDados();
@@ -121,5 +132,32 @@ export class Inicial implements OnInit{
   // Formata a string "HH:MM:SS" para "HH:MM" para ficar mais bonito na tela
   formatarHora(hora: string): string {
     return hora ? hora.substring(0, 5) : '';
+  }
+
+  abrirModalDefinirPrincipal(cardapio: Cardapio) {
+    this.cardapioSelecionado = cardapio;
+    this.mostrarModal = true;
+  }
+
+  confirmarDefinirPrincipal() {
+    if (!this.cardapioSelecionado) return;
+
+    this.planningService.atualizarCardapio(this.cardapioSelecionado.id, { principal: true })
+      .subscribe({
+        next: () => {
+          this.mostrarModal = false;
+          this.cardapioSelecionado = null;
+          this.carregarDados(); // recarrega para refletir mudança
+        },
+        error: (err) => {
+          console.error('Erro ao definir principal', err);
+          alert('Não foi possível definir o cardápio como principal.');
+        }
+      });
+  }
+
+  fecharModal() {
+    this.mostrarModal = false;
+    this.cardapioSelecionado = null;
   }
 }
