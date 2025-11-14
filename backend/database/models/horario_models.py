@@ -13,5 +13,14 @@ class Horario(Base):
 
     tipo_refeicao = relationship("TipoRefeicao", back_populates="horarios")
     usuario = relationship("Usuario", back_populates="horarios")
-    cardapios = relationship("Cardapio", back_populates="horario")
-    checks = relationship("Check", back_populates="horario")
+    cardapios = relationship(
+        "Cardapio", 
+        back_populates="horario", 
+        cascade="all, delete-orphan" 
+    )
+    
+    checks = relationship(
+        "Check", 
+        back_populates="horario", 
+        cascade="all, delete-orphan"
+    )

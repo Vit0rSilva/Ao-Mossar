@@ -19,5 +19,4 @@ class Alimento(Base):
 
     unidade = Column(Integer, nullable=True)
 
-
-    cardapio_alimentos = relationship("CardapioAlimento", back_populates="alimento")
+    cardapio_alimentos = relationship("CardapioAlimento", back_populates="alimento",cascade="all, delete-orphan")

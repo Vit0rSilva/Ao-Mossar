@@ -13,4 +13,4 @@ class Cardapio(Base):
     principal = Column(Boolean, default=False)
 
     horario = relationship("Horario", back_populates="cardapios")
-    cardapio_alimentos = relationship("CardapioAlimento", back_populates="cardapio")
+    cardapio_alimentos = relationship("CardapioAlimento", back_populates="cardapio", cascade="all, delete-orphan")
